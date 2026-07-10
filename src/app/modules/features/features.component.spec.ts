@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, TestBed } from '@angular/core/testing';
+import { waitForAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TopbarComponent } from 'src/app/modules/shared/components/topbar/topbar.component';
 import { localStorageSpy, profileServiceSpy } from 'src/app/helpers/tests/spies';
@@ -10,7 +10,7 @@ import { NavbarComponent } from 'src/app/modules/shared/components/navbar/navbar
 import { FeaturesComponent } from 'src/app/modules/features/features.component';
 
 describe('CommonLayoutComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule],
       declarations: [

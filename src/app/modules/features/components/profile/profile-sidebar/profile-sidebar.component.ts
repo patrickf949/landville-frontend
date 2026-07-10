@@ -9,6 +9,7 @@ import { removeSubscription } from 'src/app/helpers/unsubscribe';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
+  standalone: false,
   selector: 'app-profile-sidebar',
   templateUrl: './profile-sidebar.component.html',
   styleUrls: ['./profile-sidebar.component.scss']

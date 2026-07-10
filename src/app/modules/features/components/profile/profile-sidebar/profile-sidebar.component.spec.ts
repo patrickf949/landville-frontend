@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ProfileSidebarComponent } from 'src/app/modules/features/components/profile/profile-sidebar/profile-sidebar.component';
@@ -34,7 +34,7 @@ describe('ProfileSidebarComponent', () => {
     resetSpies([profileServiceSpy, toastServiceSpy]);
   });
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, NgxSpinnerModule],
       declarations: [ProfileSidebarComponent, RoleTransformPipe],
@@ -78,7 +78,7 @@ describe('ProfileSidebarComponent', () => {
     fixture.detectChanges();
     expect(profileServiceSpy.updateProfile).toHaveBeenCalled();
   });
-  it('should throw error if image is invalid', async(() => {
+  it('should throw error if image is invalid', waitForAsync(() => {
     const event = {
       target: {
         files: [{ name: 'aa' }]
@@ -133,7 +133,7 @@ describe('ProfileSidebarComponent', () => {
   afterEach(() => {
     resetSpies([profileServiceSpy, toastServiceSpy]);
   });
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, NgxSpinnerModule],
       declarations: [ProfileSidebarComponent, RoleTransformPipe],

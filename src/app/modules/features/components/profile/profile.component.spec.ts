@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProfileComponent } from './profile.component';
 import { AppModule } from 'src/app/app.module';
@@ -15,7 +15,6 @@ import {
   mockDepositsResponse,
   mockProfileResponse
 } from 'src/app/helpers/tests/mocks';
-import { configureTestSuite } from 'ng-bullet';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ProfileComponent', () => {
@@ -27,7 +26,7 @@ describe('ProfileComponent', () => {
     profileServiceSpy.userProfile$ = of(mockProfileResponse);
   });
 
-  configureTestSuite(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [AppModule, FeaturesModule, RouterTestingModule],
       declarations: [],
@@ -44,7 +43,7 @@ describe('ProfileComponent', () => {
     })
       .compileComponents()
       .then(r => {});
-  });
+  }));
 
   beforeEach(() => {
     localStorage.clear();

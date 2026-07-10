@@ -6,6 +6,7 @@ import { ProfileService } from 'src/app/services/profile/profile.service';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']

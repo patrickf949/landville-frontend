@@ -8,24 +8,16 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { CommonLayoutRoutes } from 'src/app/modules/features/features.routing';
-import { CompanyComponent } from 'src/app/modules/features/components/company/company.component';
 import { HomeComponent } from 'src/app/components/home/home.component';
 import { ProfileModule } from 'src/app/modules/features/components/profile/profile.module';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ProfileService } from 'src/app/services/profile/profile.service';
-import { DepositsComponent } from 'src/app/modules/features/components/deposits/deposits.component';
-import { ClientsComponent } from 'src/app/modules/features/components/clients/clients.component';
-import { TokenizedCardComponent } from 'src/app/modules/features/components/payment/tokenized-card/tokenized-card.component';
-import { PinValidateComponent } from 'src/app/modules/features/components/payment/pin-validate/pin-validate.component';
-import { PinPaymentComponent } from 'src/app/modules/features/components/payment/pin-payment/pin-payment.component';
-import {
-  InternationalPaymentComponent
-} from 'src/app/modules/features/components/payment/international-payment/international-payment.component';
-import {
-  InternationalPaymentStatusComponent
-} from 'src/app/modules/features/components/payment/international-payment-status/international-payment-status.component';
-import { DigitOnlyModule } from '@uiowa/digit-only';
+import { DigitOnlyDirective } from '@uiowa/digit-only';
 import { ReviewComponent } from 'src/app/modules/features/components/client-review/review.component';
+import { ListingFormComponent } from 'src/app/modules/features/components/listing-form/listing-form.component';
+import { MyListingsComponent } from 'src/app/modules/features/components/my-listings/my-listings.component';
+import { InboxComponent } from 'src/app/modules/features/components/chat/inbox/inbox.component';
+import { ThreadComponent } from 'src/app/modules/features/components/chat/thread/thread.component';
 
 @NgModule({
   imports: [
@@ -38,19 +30,15 @@ import { ReviewComponent } from 'src/app/modules/features/components/client-revi
     ReactiveFormsModule,
     ProfileModule,
     HttpClientModule,
-    DigitOnlyModule
+    DigitOnlyDirective
   ],
   declarations: [
     HomeComponent,
-    CompanyComponent,
-    DepositsComponent,
-    ClientsComponent,
-    InternationalPaymentStatusComponent,
-    TokenizedCardComponent,
-    PinValidateComponent,
-    PinPaymentComponent,
-    InternationalPaymentComponent,
-    ReviewComponent
+    ReviewComponent,
+    ListingFormComponent,
+    MyListingsComponent,
+    InboxComponent,
+    ThreadComponent
   ],
   providers: [ProfileService, LocalStorageService, Title]
 })

@@ -1,5 +1,5 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, NgForm } from '@angular/forms';
 
 import {
@@ -34,7 +34,7 @@ describe('PersonalInformationComponent', () => {
   });
   afterEach(() => resetSpies([profileServiceSpy, toastServiceSpy]));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
@@ -72,7 +72,7 @@ describe('PersonalInformationComponent', () => {
 
     expect(profileServiceSpy.userProfile$).toBeDefined();
   });
-  it('should submit form', async(() => {
+  it('should submit form', waitForAsync(() => {
     const profileForm = mockProfileForm as NgForm;
     profileServiceSpy.updateProfile.and.returnValue(of(mockProfileResponse));
     component.saveProfile();
@@ -87,7 +87,7 @@ describe('PersonalInformationComponent', () => {
     expect(component.saveProfile).toHaveBeenCalledTimes(1);
   });
 
-  it('Should show a toast message when the response from server returns form validation error', async(() => {
+  it('Should show a toast message when the response from server returns form validation error', waitForAsync(() => {
     const profileForm = mockProfileForm as NgForm;
     profileServiceSpy.updateProfile.and.returnValue(
       throwError(mockProfileFormErrorResponse)

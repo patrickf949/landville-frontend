@@ -8,10 +8,7 @@ import { PersonalInformationComponent } from 'src/app/modules/features/component
 import { ProfileSidebarComponent } from 'src/app/modules/features/components/profile/profile-sidebar/profile-sidebar.component';
 import { ProfileComponent } from 'src/app/modules/features/components/profile/profile.component';
 import { RoleTransformPipe } from 'src/app/pipes/role.pipe';
-import { FinancialInformationComponent } from 'src/app/modules/features/components/profile/financial-information/financial-information.component';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
-import { TransactionInformationComponent } from './transaction-information/transaction-information.component';
-import { EmptyTransactionComponent } from './transaction-information/empty-transaction/empty-transaction.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 @NgModule({
@@ -19,10 +16,7 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
     ProfileSidebarComponent,
     ProfileComponent,
     PersonalInformationComponent,
-    FinancialInformationComponent,
-    RoleTransformPipe,
-    TransactionInformationComponent,
-    EmptyTransactionComponent
+    RoleTransformPipe
   ],
   exports: [ProfileComponent],
   imports: [

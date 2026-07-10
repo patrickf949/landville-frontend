@@ -65,4 +65,10 @@ export class ProfileService {
       this.httpOptions
     );
   }
+
+  getPublicProfile(userId: number | string): Observable<any> {
+    return this.http.get<any>(
+      `${APPCONFIG.base_url}/auth/users/${userId}/`
+    );
+  }
 }

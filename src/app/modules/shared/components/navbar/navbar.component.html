@@ -4,11 +4,11 @@
   <div class="container">
     <a class="navbar-brand" routerLink="/">
       <img
-        alt="landville logo"
-        height="30"
-        src="https://res.cloudinary.com/landville/image/upload/v1564556647/FRONTEND_ASSETS/ICON/bwy9wvyy6riwrdu0576n.png"
-        title=""
+        alt="Atterville logo"
+        height="34"
+        src="assets/img/ICON/Logo Icon.png"
       />
+      <span class="brand-name ml-2">Atterville</span>
     </a>
     <button
       aria-controls="navbarSupportedContent-5"
@@ -43,17 +43,25 @@
         <li *ngIf="authenticated" class="nav-item">
           <a
             class="nav-link waves-effect waves-light"
-            routerLink="/clients"
+            routerLink="/my-listings"
             routerLinkActive="active"
-          >Partners</a
+          >My Listings</a
           >
         </li>
         <li *ngIf="authenticated" class="nav-item">
           <a
             class="nav-link waves-effect waves-light"
-            routerLink="/user/deposits"
+            routerLink="/messages"
             routerLinkActive="active"
-          >My Deposits</a
+          ><i class="fa fa-comments mr-1"></i>Messages</a
+          >
+        </li>
+        <li *ngIf="authenticated" class="nav-item">
+          <a
+            class="nav-link nav-cta waves-effect waves-light"
+            routerLink="/create-listing"
+            routerLinkActive="active"
+          ><i class="fa fa-plus mr-1"></i>List a property</a
           >
         </li>
         <li *ngIf="!authenticated" class="nav-item">
@@ -66,41 +74,6 @@
           >Log in
           </a>
         </li>
-        <li *ngIf="authenticated" class="nav-item avatar dropdown">
-          <a
-            aria-expanded="false"
-            aria-haspopup="true"
-            class="nav-link dropdown-toggle waves-effect waves-light"
-            data-toggle="dropdown"
-            id="navbarDropdownMenuLink-6"
-          >
-            <span class="username">Make Payment</span>
-            <b class="caret"></b>
-          </a>
-          <div
-            aria-labelledby="navbarDropdownMenuLink-6"
-            class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
-          >
-            <a
-              class="dropdown-item waves-effect waves-light eborder-top"
-              routerLink="/payment/pin"
-              routerLinkActive="active"
-            >
-              Card & PIN</a
-            >
-            <a
-              class="dropdown-item waves-effect waves-light"
-              routerLink="/payment/international"
-            >International Card</a
-            >
-            <a
-              class="dropdown-item waves-effect waves-light"
-              routerLink="/payment/saved-card"
-            >Saved Card</a
-            >
-          </div>
-        </li>
-
         <li *ngIf="authenticated" class="nav-item avatar dropdown">
           <a
             aria-expanded="false"
@@ -130,11 +103,6 @@
               routerLink="/profile"
               routerLinkActive="active"
             ><i class="fa fa-user"></i> My Profile</a
-            >
-            <a
-              class="dropdown-item waves-effect waves-light"
-              routerLink="/create-company"
-            ><i class="fa fa-plus"></i> Create Company</a
             >
             <a
               class="dropdown-item waves-effect waves-light"

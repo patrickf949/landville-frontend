@@ -15,6 +15,7 @@ import { ProfileService } from 'src/app/services/profile/profile.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
+  standalone: false,
   selector: 'app-personal-information',
   templateUrl: './personal-information.component.html',
   styleUrls: ['./personal-information.component.scss']

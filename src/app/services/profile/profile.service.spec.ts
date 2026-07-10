@@ -21,9 +21,9 @@ describe('ProfileService', () => {
       imports: [HttpClientTestingModule],
       providers: [ProfileService, LocalStorageService]
     });
-    service = TestBed.get(ProfileService);
-    httpMock = TestBed.get(HttpTestingController);
-    storage = TestBed.get(LocalStorageService);
+    service = TestBed.inject(ProfileService);
+    httpMock = TestBed.inject(HttpTestingController);
+    storage = TestBed.inject(LocalStorageService);
   });
   afterEach(() => {
     // no HTTP requests should be pending/unhandled after the tests
