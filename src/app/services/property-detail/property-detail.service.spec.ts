@@ -21,12 +21,12 @@ describe('PropertyDetailService', () => {
                 }
             ]
         });
-        propertyDetailService = TestBed.get(PropertyDetailService);
+        propertyDetailService = TestBed.inject(PropertyDetailService);
     }
     );
 
     it('should be created', () => {
-        propertyDetailService = TestBed.get(PropertyDetailService);
+        propertyDetailService = TestBed.inject(PropertyDetailService);
         expect(propertyDetailService).toBeTruthy();
     });
 

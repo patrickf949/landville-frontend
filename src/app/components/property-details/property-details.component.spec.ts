@@ -1,5 +1,5 @@
 import { ReviewsComponent } from 'src/app/components/property-details/reviews/reviews.component';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PropertyDetailsComponent } from 'src/app/components/property-details/property-details.component';
 import { PropertyDetailComponent } from 'src/app/components/property-details/property-detail/property-detail.component';
@@ -78,7 +78,7 @@ describe('Property detail', () => {
     beforeAll(() => resetSpies([propertyDetailSpy]));
     afterEach(() => resetSpies([propertyDetailSpy]));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 PropertyDetailsComponent,

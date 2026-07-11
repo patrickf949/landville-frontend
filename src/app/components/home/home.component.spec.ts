@@ -1,5 +1,5 @@
 import { RouterTestingModule } from '@angular/router/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from 'src/app/components/home/home.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +24,7 @@ describe('HomeComponent', () => {
   beforeAll(() => resetSpies([propertiesServiceSpy]));
   afterEach(() => resetSpies([propertiesServiceSpy]));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,

@@ -1,28 +1,91 @@
-<div class="container">
+<div class="container details-page">
   <div class="row">
     <div class="col-md-8">
       <app-property-detail [title]="title" [street]="street" [state]="state" [city]="city" [price]="price"
                            [imageMain]="imageMain" [imageOthers]="imageOthers" [bathrooms]="bathrooms" [garages]="garages"
                            [bedrooms]="bedrooms" [ifBuilding]="ifBuilding">
-
       </app-property-detail>
+
+      <div class="badge-row my-2">
+        <span class="tag primary">{{ listingType }}</span>
+        <span class="tag">{{ propertyType }}</span>
+        <span class="tag" *ngIf="rentPeriod">{{ rentPeriod }}</span>
+        <span class="tag" [class.closed]="status !== 'Available'">{{ status }}</span>
+      </div>
 
       <div class="about">
         <app-property-description [createdAt]="createdAt" [lotSize]="lotSize" [description]="description"
-                                  [video]="video" [ifVideo]="ifVideo" [purchasePlan]="purchasePlan"></app-property-description>
+                                  [video]="video" [ifVideo]="ifVideo"></app-property-description>
       </div>
 
+      <!-- Location quality -->
+      <div class="info-card" *ngIf="distanceToMainRoad || distanceToCity || noiseLevel || nearby.length">
+        <h5><i class="fa fa-map-signs mr-2"></i>Location &amp; surroundings</h5>
+        <div class="row">
+          <div class="col-sm-4 quality" *ngIf="distanceToMainRoad">
+            <i class="fa fa-road"></i>
+            <div><small>Main road</small><strong>{{ distanceToMainRoad | titlecase }}</strong></div>
+          </div>
+          <div class="col-sm-4 quality" *ngIf="distanceToCity">
+            <i class="fa fa-city"></i>
+            <div><small>City / big town</small><strong>{{ distanceToCity | titlecase }}</strong></div>
+          </div>
+          <div class="col-sm-4 quality" *ngIf="noiseLevel">
+            <i class="fa fa-volume-down"></i>
+            <div><small>Surroundings</small><strong>{{ noiseLevel | titlecase }}</strong></div>
+          </div>
+        </div>
+        <div class="chip-row mt-2" *ngIf="nearby.length">
+          <span class="chip" *ngFor="let f of nearby">
+            <i class="fa {{ f.icon }} mr-1"></i>{{ f.name }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Amenities -->
+      <div class="info-card" *ngIf="amenities.length">
+        <h5><i class="fa fa-check-circle mr-2"></i>Amenities</h5>
+        <div *ngFor="let group of amenityGroups" class="mb-2">
+          <small class="group-label">{{ group.name | titlecase }}</small>
+          <div class="chip-row">
+            <span class="chip" *ngFor="let a of group.items">
+              <i class="fa {{ a.icon }} mr-1"></i>{{ a.name }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="info-card" *ngIf="lat !== null">
+        <h5><i class="fa fa-map-marker-alt mr-2"></i>Where you'll find it</h5>
+        <div class="details-map">
+          <app-map mode="single" [lat]="lat" [lon]="lon"></app-map>
+        </div>
+      </div>
     </div>
+
     <div class="col-md-4">
-      <div class="card mt-5 text-center">
-        <app-client-admin [clientName]="clientName" [clientStreet]="clientStreet"
-                          [clientState]="clientState" [clientCity]="clientCity" [phone]="phone" [email]="email">
-        </app-client-admin>
+      <!-- Owner / connect card -->
+      <div class="info-card connect-card mt-md-5 text-center">
+        <div class="avatar"><i class="fa fa-user"></i></div>
+        <h6 class="mb-0">{{ owner?.first_name || 'Listing owner' }} {{ owner?.last_name || '' }}</h6>
+        <small class="text-muted d-block mb-2">{{ owner?.email }}</small>
+        <a *ngIf="owner?.id" [routerLink]="['/user', owner.id]" class="d-block mb-3 owner-listings-link">
+          <i class="fa fa-th-large mr-1"></i>View owner's other listings
+        </a>
+        <button class="btn btn-primary btn-block" (click)="chatWithOwner()" [disabled]="startingChat">
+          <i class="fa fa-comments mr-1"></i>
+          {{ startingChat ? 'Opening chat…' : 'Chat with owner' }}
+        </button>
+        <button class="btn btn-outline-primary btn-block" (click)="toggleSave()">
+          <i class="fa mr-1" [class.fa-heart]="saved" [class.fa-heart-o]="!saved"
+             [ngClass]="saved ? 'fa-heart' : 'fa-heart'"></i>
+          {{ saved ? 'Saved' : 'Save property' }}
+        </button>
+        <small class="text-muted d-block mt-2">
+          Chat is text-only and stays on Atterville.
+        </small>
       </div>
-      <div>
-        <app-reviews *ngIf="clientId" [clientId]="clientId"></app-reviews>
-      </div>
-      <img alt="Card image" class="card-img mt-5" src="assets/img/designs/Design.jpg">
     </div>
   </div>
   <ngx-spinner></ngx-spinner>

@@ -3,14 +3,13 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { PropertiesService } from 'src/app/services/properties/properties.service';
 import { AppModule } from 'src/app/app.module';
 import { resetSpies, propertiesServiceSpy } from 'src/app/helpers/tests/spies';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed , waitForAsync} from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { PropertiesComponent } from 'src/app/components/properties/properties.component';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import {configureTestSuite} from 'ng-bullet';
 
 describe('PropertiesComponent', () => {
   let component: PropertiesComponent;
@@ -32,7 +31,7 @@ describe('PropertiesComponent', () => {
   beforeAll(() => resetSpies([propertiesServiceSpy]));
   afterEach(() => resetSpies([propertiesServiceSpy]));
 
-  configureTestSuite(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [],
       imports: [
@@ -48,7 +47,7 @@ describe('PropertiesComponent', () => {
         }
       ]
     }).compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PropertiesComponent);

@@ -15,16 +15,16 @@ describe("PropertiesService", () => {
       imports: [HttpClientTestingModule],
       providers: [LocalStorageService]
     });
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it("should be created", () => {
-    const service: PropertiesService = TestBed.get(PropertiesService);
+    const service: PropertiesService = TestBed.inject(PropertiesService);
     expect(service).toBeTruthy();
   });
 
   it("should send a GET method", () => {
-    const service: PropertiesService = TestBed.get(PropertiesService);
+    const service: PropertiesService = TestBed.inject(PropertiesService);
     const mockUrl = "http://127.0.0.1:8000/api/v1/properties/";
     service.getProperties(mockUrl).subscribe();
     const req = httpMock.expectOne(mockUrl);
