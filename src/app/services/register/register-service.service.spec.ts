@@ -14,16 +14,16 @@ describe('RegisterServiceService', () => {
     TestBed.configureTestingModule({
     imports: [HttpClientTestingModule ],
   });
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   }
   );
 
   it('should be created', () => {
-    const service: RegisterServiceService = TestBed.get(RegisterServiceService);
+    const service: RegisterServiceService = TestBed.inject(RegisterServiceService);
     expect(service).toBeTruthy();
   });
   it('should trigger a service', () => {
-    const service: RegisterServiceService = TestBed.get(RegisterServiceService);
+    const service: RegisterServiceService = TestBed.inject(RegisterServiceService);
     const url = APPCONFIG.base_url + service.registerUrl;
     const mockData: User = {
       email: 'akram@andela.com',
@@ -35,7 +35,7 @@ describe('RegisterServiceService', () => {
     req.flush(mockData);
     });
   it('should use the right url', () => {
-    const service: RegisterServiceService = TestBed.get(RegisterServiceService);
+    const service: RegisterServiceService = TestBed.inject(RegisterServiceService);
     const url = APPCONFIG.base_url + service.registerUrl;
     const mockData: User = {
       email: 'akram@andela.com',
@@ -47,7 +47,7 @@ describe('RegisterServiceService', () => {
     // expect(req.request.url).toBe({});
   });
   it('should use POST method', () => {
-    const service: RegisterServiceService = TestBed.get(RegisterServiceService);
+    const service: RegisterServiceService = TestBed.inject(RegisterServiceService);
     const url = APPCONFIG.base_url + service.registerUrl;
     const mockData: User = {
       email: 'akram@andela.com',

@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://landville-backend-web-api.herokuapp.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "warn"
+  }
+}

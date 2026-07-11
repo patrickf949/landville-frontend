@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Title } from '@angular/platform-browser';
 
 @Component({
+  standalone: false,
   selector: 'app-password-reset',
   templateUrl: './password-reset.component.html',
   styleUrls: ['./password-reset.component.scss']

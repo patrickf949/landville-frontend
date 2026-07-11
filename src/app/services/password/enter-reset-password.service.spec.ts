@@ -11,16 +11,16 @@ describe('EnterResetPasswordService', () => {
     TestBed.configureTestingModule({
     imports: [HttpClientTestingModule ],
   });
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should create EnterResetPasswordService', () => {
-    const service: EnterResetPasswordService = TestBed.get(EnterResetPasswordService);
+    const service: EnterResetPasswordService = TestBed.inject(EnterResetPasswordService);
     expect(service).toBeTruthy();
   });
 
   it('should trigger a service valid password inputs', () => {
-    const service: EnterResetPasswordService = TestBed.get(EnterResetPasswordService);
+    const service: EnterResetPasswordService = TestBed.inject(EnterResetPasswordService);
     const mockData = {
       newPassword: 'akram100',
       confirmPassword: 'akram100'

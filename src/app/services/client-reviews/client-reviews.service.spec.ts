@@ -16,11 +16,11 @@ describe('ClientReviewsService', () => {
         { provide: ClientReviewsService, useValue: reviewsSpy }
       ]
     });
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
-    const service: ClientReviewsService = TestBed.get(ClientReviewsService);
+    const service: ClientReviewsService = TestBed.inject(ClientReviewsService);
     expect(service).toBeTruthy();
   });
 

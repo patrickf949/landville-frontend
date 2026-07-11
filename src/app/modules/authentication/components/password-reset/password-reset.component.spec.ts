@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed , waitForAsync} from '@angular/core/testing';
 import {
   PasswordResetComponent
 } from 'src/app/modules/authentication/components/password-reset/password-reset.component';
@@ -21,7 +21,6 @@ import { HomeComponent } from 'src/app/components/home/home.component';
 import { PropertiesComponent } from 'src/app/components/properties/properties.component';
 import { PropertyDetailsComponent } from 'src/app/components/property-details/property-details.component';
 import { NoPropertiesComponent } from 'src/app/components/properties/no-properties/no-properties.component';
-import { configureTestSuite } from 'ng-bullet';
 import { passwordResetMock, passwordResetResponse } from 'src/app/helpers/tests/mocks';
 import { resetSpies } from 'src/app/helpers/tests/social.spies';
 import { ClientReviewsComponent } from 'src/app/components/client-reviews/client-reviews.component';
@@ -34,7 +33,7 @@ describe('PasswordResetComponent', () => {
   beforeAll(() => resetSpies([toastServiceSpy, resetLinkServiceSpy]));
   afterEach(() => resetSpies([toastServiceSpy, resetLinkServiceSpy]));
 
-  configureTestSuite(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         PasswordResetComponent,
@@ -61,7 +60,7 @@ describe('PasswordResetComponent', () => {
       ]
     })
       .compileComponents().then(r => {});
-   });
+   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PasswordResetComponent);

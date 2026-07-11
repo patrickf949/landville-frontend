@@ -5,6 +5,7 @@ import { Term } from 'src/app/models/Term';
 import {Title} from '@angular/platform-browser';
 
 @Component({
+  standalone: false,
   selector: 'app-terms',
   templateUrl: './terms.component.html',
   styleUrls: ['./terms.component.scss']
@@ -16,7 +17,7 @@ export class TermsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title.setTitle('LandVille Terms and Conditions of Use')
+    this.title.setTitle('Atterville Terms and Conditions of Use')
     this.terms = this.termsService.getTerms();
 
   }

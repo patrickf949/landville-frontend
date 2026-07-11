@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
+  standalone: false,
   selector: 'app-client-reviews',
   templateUrl: './client-reviews.component.html',
   styleUrls: ['./client-reviews.component.scss']

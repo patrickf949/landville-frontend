@@ -13,6 +13,7 @@ import { RegistersuccessComponent } from 'src/app/modules/authentication/compone
 import { HomeComponent } from 'src/app/components/home/home.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { ClientReviewsComponent } from 'src/app/components/client-reviews/client-reviews.component';
+import { PublicProfileComponent } from 'src/app/components/public-profile/public-profile.component';
 
 const routes: Routes = [
   {
@@ -26,7 +27,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: './modules/authentication/authentication.module#AuthenticationModule'
+        loadChildren: () => import('./modules/authentication/authentication.module').then(m => m.AuthenticationModule)
       }
     ],
     canActivate: [NoAuthGuard]
@@ -35,7 +36,7 @@ const routes: Routes = [
     path: 'terms-and-conditions',
     component: TermsPageComponent,
     data: {
-      title: 'LandVille Terms and Conditions of Use',
+      title: 'Atterville Terms and Conditions of Use',
       tags: [],
     },
   },
@@ -52,7 +53,7 @@ const routes: Routes = [
     component: FeaturesComponent,
     children: [{
       path: '',
-      loadChildren: './modules/features/features.module#FeaturesModule',
+      loadChildren: () => import('./modules/features/features.module').then(m => m.FeaturesModule),
     }],
     canActivate: [AuthGuard],
   },
@@ -60,14 +61,14 @@ const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     data: {
-      title: 'LandVille helps you access real estate and property investing in Nigeria.' +
+      title: 'Atterville helps you access real estate and property investing in Nigeria.' +
         ' Make the best and safest decision. ' +
         'Let tech help you find your dream Property today',
       tags: [
         // Open Graph Data
         {
           property: 'og:title',
-          content: 'LandVille | Find your dream property today',
+          content: 'Atterville | Find your dream property today',
         },
         {
           property: 'og:description',
@@ -88,7 +89,7 @@ const routes: Routes = [
         },
         {
           name: 'twitter:title',
-          content: 'LandVille | Find your dream Property today',
+          content: 'Atterville | Find your dream Property today',
         },
         {
           name: 'twitter:description',
@@ -107,7 +108,7 @@ const routes: Routes = [
           content: 'Browse a wide range of the best property across Nigeria'
         },
         { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'LandVille' },
+        { property: 'og:site_name', content: 'Atterville' },
         { name: 'og:image', content: 'assets/img/ICON/Logo.png' },
         // Twitter
         { name: 'twitter:card', content: 'summary' },
@@ -128,7 +129,7 @@ const routes: Routes = [
         },
         // Twitter
         { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'LandVille' },
+        { property: 'og:site_name', content: 'Atterville' },
         // Twitter
         { name: 'twitter:card', content: 'summary' },
         { name: 'twitter:image', content: 'assets/img/ICON/Logo.png' },
@@ -138,6 +139,16 @@ const routes: Routes = [
     },
   },
   { path: 'no-properties', component: NoPropertiesComponent },
+  {
+    path: 'user/:id', component: PublicProfileComponent, data: {
+      title: 'Member profile | Atterville',
+      tags: [
+        { property: 'og:title', content: 'Member profile | Atterville' },
+        { property: 'og:description', content: 'See this member\'s available listings on Atterville' },
+        { property: 'og:site_name', content: 'Atterville' },
+      ]
+    }
+  },
   { path: 'auth/:clientId/reviews', component: ClientReviewsComponent },
   {
     path: '**',

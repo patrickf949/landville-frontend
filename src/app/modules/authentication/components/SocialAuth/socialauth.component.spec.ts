@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed , waitForAsync} from '@angular/core/testing';
 import { SocialLoginComponentt } from 'src/app/modules/authentication/components/SocialAuth/socialauth.component';
-import { AuthService } from 'angularx-social-login';
+import { AuthService } from '@abacritt/angularx-social-login';
 import { authServiceSpy, loginServiceSpy, resetSpies } from 'src/app/helpers/tests/social.spies';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
@@ -19,7 +19,6 @@ import {
   EnterResetPasswordComponent
 } from 'src/app/modules/authentication/components/enter-reset-password/enter-reset-password.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { configureTestSuite } from 'ng-bullet';
 import { userData } from 'src/app/helpers/tests/mocks';
 
 describe('SocialLoginComponentt', () => {
@@ -30,7 +29,7 @@ describe('SocialLoginComponentt', () => {
   beforeAll(() => resetSpies([loginServiceSpy, authServiceSpy]));
   afterEach(() => resetSpies([loginServiceSpy, authServiceSpy]));
 
-  configureTestSuite(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         SocialLoginComponentt,
@@ -54,12 +53,12 @@ describe('SocialLoginComponentt', () => {
         {provide: LoginService, useValue: loginServiceSpy}
       ]
     }).compileComponents().then(r => {});
-   });
+   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SocialLoginComponentt);
     component = fixture.componentInstance;
-    service = TestBed.get(LoginService);
+    service = TestBed.inject(LoginService);
     fixture.detectChanges();
   });
 

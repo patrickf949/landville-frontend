@@ -1,5 +1,5 @@
 import { ClientReviewsComponent } from 'src/app/components/client-reviews/client-reviews.component';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   EnterResetPasswordComponent
 } from 'src/app/modules/authentication/components/enter-reset-password/enter-reset-password.component';
@@ -20,9 +20,6 @@ import { FeaturesComponent } from 'src/app/modules/features/features.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import {
-  InternationalPaymentStatusComponent
-} from 'src/app/modules/features/components/payment/international-payment-status/international-payment-status.component';
 import { TermsPageComponent } from 'src/app/components/terms/terms.component';
 import {
   RegistersuccessComponent
@@ -37,15 +34,14 @@ describe('EnterResetPasswordComponent', () => {
   let fixture: ComponentFixture<EnterResetPasswordComponent>;
   let el: DebugElement;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         PasswordResetComponent,
         EnterResetPasswordComponent,
         AuthenticationComponent,
         FeaturesComponent,
-        InternationalPaymentStatusComponent,
-        TermsPageComponent,
+                TermsPageComponent,
         RegistersuccessComponent,
         HomeComponent,
         PropertiesComponent,
@@ -82,7 +78,7 @@ describe('EnterResetPasswordComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Should call the onSubmit method when the button is clicked', async(() => {
+  it('Should call the onSubmit method when the button is clicked', waitForAsync(() => {
     fixture.detectChanges();
     spyOn(component, 'onSubmit');
     el = fixture.debugElement.query(By.css('button')).nativeElement;
@@ -90,25 +86,25 @@ describe('EnterResetPasswordComponent', () => {
   }));
 
 
-  it('should be invalid when password is not set', async(() => {
+  it('should be invalid when password is not set', waitForAsync(() => {
     component.enterPasswordForm.get('newPassword').setValue('');
     component.enterPasswordForm.get('confirmPassword').setValue('');
     expect(component.enterPasswordForm.valid).toBeFalsy();
   }));
 
-  it('should be invalid when provided password is too common', async(() => {
+  it('should be invalid when provided password is too common', waitForAsync(() => {
     component.enterPasswordForm.get('newPassword').setValue('123456');
     component.enterPasswordForm.get('confirmPassword').setValue('123456');
     expect(component.enterPasswordForm.valid).toBeTruthy();
   }));
 
-  it('should be valid when password is provided', async(() => {
+  it('should be valid when password is provided', waitForAsync(() => {
     component.enterPasswordForm.get('newPassword').setValue('confirmPassword');
     component.enterPasswordForm.get('confirmPassword').setValue('confirmPassword');
     expect(component.enterPasswordForm.valid).toBeTruthy();
   }));
 
-  it('Should get a backend response when password is provided', async(() => {
+  it('Should get a backend response when password is provided', waitForAsync(() => {
     const response = {
       data: {
         message: 'If you have an account with us we have sent an email to reset your password'
@@ -121,7 +117,7 @@ describe('EnterResetPasswordComponent', () => {
     expect(component.success).toEqual(true);
   }));
 
-  it('Should throw an error when email is invalid', async(() => {
+  it('Should throw an error when email is invalid', waitForAsync(() => {
     const errorResponse = {
       errors: {
         email: ['Enter a valid email address.']

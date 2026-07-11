@@ -1,6 +1,6 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { ClientReviewsService } from 'src/app/services/client-reviews/client-reviews.service';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ReviewsComponent } from 'src/app/components/property-details/reviews/reviews.component';
 import { httpClientSpy, reviewsSpy, resetSpies } from 'src/app/helpers/tests/spies';
@@ -14,7 +14,7 @@ describe('ReviewsComponent', () => {
   beforeAll(() => resetSpies([reviewsSpy]));
   afterEach(() => resetSpies([reviewsSpy]));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ReviewsComponent],
         imports: [HttpClientModule, NgxSpinnerModule,

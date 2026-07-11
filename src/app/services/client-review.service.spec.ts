@@ -14,8 +14,8 @@ describe('ClientReviewService', () => {
       ],
       imports: [HttpClientTestingModule]
     });
-    httpTestingController = TestBed.get(HttpTestingController);
-    service = TestBed.get(ClientReviewService);
+    httpTestingController = TestBed.inject(HttpTestingController);
+    service = TestBed.inject(ClientReviewService);
   });
   it('should be created', () => {
     expect(service).toBeTruthy();

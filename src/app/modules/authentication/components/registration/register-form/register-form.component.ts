@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, NgForm } from '@angular/forms';
 import { mustMatch } from 'src/app/helpers/validators/passwordvalidator';
 
 @Component({
+  standalone: false,
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.scss']

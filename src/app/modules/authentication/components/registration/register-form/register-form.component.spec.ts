@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegisterFormComponent } from './register-form.component';
 import { DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -13,7 +13,7 @@ describe('RegisterFormComponent', () => {
   let de: DebugElement;
   let el: DebugElement;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [RegisterFormComponent],
       imports: [
@@ -38,7 +38,7 @@ describe('RegisterFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should trigger onsubmit method', async(() => {
+  it('should trigger onsubmit method', waitForAsync(() => {
     const registerForm = {
       value: {
         email: 'akram@gmail.com',
@@ -52,14 +52,14 @@ describe('RegisterFormComponent', () => {
     component.onSubmit(registerForm);
     expect(component.onSubmit).toBeTruthy();
   }));
-  it('should call the onSubmit method when button is clicked', async(() => {
+  it('should call the onSubmit method when button is clicked', waitForAsync(() => {
     fixture.detectChanges();
     spyOn(component, 'onSubmit');
     el = fixture.debugElement.query(By.css('button')).nativeElement;
     expect(component.onSubmit).toHaveBeenCalledTimes(0);
   }));
 
-  it('should be invalid', async(() => {
+  it('should be invalid', waitForAsync(() => {
     component.registerForm.controls[`email`].setValue('');
     component.registerForm.controls[`first_name`].setValue('');
     component.registerForm.controls[`last_name`].setValue('');
@@ -68,7 +68,7 @@ describe('RegisterFormComponent', () => {
     component.registerForm.controls[`confirmed_password`].setValue('');
     expect(component.registerForm.valid).toBeFalsy();
   }));
-  it('should be valid', async(() => {
+  it('should be valid', waitForAsync(() => {
     component.registerForm.controls[`email`].setValue('akram@gmail.com');
     component.registerForm.controls[`first_name`].setValue('akram');
     component.registerForm.controls[`last_name`].setValue('mukasa');

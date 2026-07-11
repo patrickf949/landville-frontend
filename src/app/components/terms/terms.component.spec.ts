@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TermsService } from 'src/app/services/terms/terms.service';
 import { TermsPageComponent } from 'src/app/components/terms/terms.component';
 
@@ -6,7 +6,7 @@ describe('TermsPageComponent', () => {
   let component: TermsPageComponent;
   let fixture: ComponentFixture<TermsPageComponent>;
   let MockTermService;
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     MockTermService = jasmine.createSpyObj(['getTerms']);
     TestBed.configureTestingModule({
       declarations: [TermsPageComponent],

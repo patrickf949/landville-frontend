@@ -1,4 +1,4 @@
-import { TestBed, inject, fakeAsync, tick, async } from '@angular/core/testing';
+import { TestBed, inject, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { Observable, Observer, of } from 'rxjs';
 import { LoginFormComponent } from 'src/app/modules/authentication/components/login/login-form/login-form.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -8,7 +8,7 @@ import { LoginService } from 'src/app/services/login/login.service';
 import { AppModule } from 'src/app/app.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { toastServiceSpy, httpServiceSpy } from 'src/app/helpers/tests/spies';
-import { HttpClient } from 'selenium-webdriver/http';
+import { HttpClient } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 
 
@@ -33,8 +33,8 @@ describe('LoginService', () => {
         NgxSpinnerModule],
 
     });
-    httpTestingController = TestBed.get(HttpTestingController);
-    logInService = TestBed.get(LoginService);
+    httpTestingController = TestBed.inject(HttpTestingController);
+    logInService = TestBed.inject(LoginService);
   });
 
   function setup() {
@@ -57,7 +57,7 @@ describe('LoginService', () => {
     );
   });
   it('should be created', () => {
-    const service: LoginService = TestBed.get(LoginService);
+    const service: LoginService = TestBed.inject(LoginService);
     expect(service).toBeTruthy();
   });
 

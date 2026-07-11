@@ -10,23 +10,23 @@ describe('LocalStorageService', () => {
   );
 
   it('should be created', () => {
-    const service: LocalStorageService = TestBed.get(LocalStorageService);
+    const service: LocalStorageService = TestBed.inject(LocalStorageService);
     expect(service).toBeTruthy();
   });
   it('should get keys from localStorage', () => {
-    const service: LocalStorageService = TestBed.get(LocalStorageService);
+    const service: LocalStorageService = TestBed.inject(LocalStorageService);
     localStorage.setItem('token', 'testToken');
     const token = service.get('token', '');
     expect(token).toBe('testToken');
   });
   it('should set keys to localStorage', () => {
-    const service: LocalStorageService = TestBed.get(LocalStorageService);
+    const service: LocalStorageService = TestBed.inject(LocalStorageService);
     service.set('anothertoken', 'anothertesttoken');
     const token = service.get('anothertoken', '');
     expect(token).toBe('anothertesttoken');
   });
   it('should clear keys from localStorage', () => {
-    const service: LocalStorageService = TestBed.get(LocalStorageService);
+    const service: LocalStorageService = TestBed.inject(LocalStorageService);
     service.set('anothertoken', 'anothertesttoken');
     service.clear();
     expect(localStorage.length).toEqual(0);

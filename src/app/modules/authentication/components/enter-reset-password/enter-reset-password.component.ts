@@ -6,6 +6,7 @@ import { EnterResetPasswordService } from 'src/app/services/password/enter-reset
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
+  standalone: false,
   selector: 'app-enter-reset-password',
   templateUrl: './enter-reset-password.component.html',
   styleUrls: ['./enter-reset-password.component.scss']

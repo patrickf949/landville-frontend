@@ -12,8 +12,8 @@ describe('TermsService', () => {
 
     });
 
-    httpTestingController = TestBed.get(HttpTestingController);
-    service = TestBed.get(TermsService);
+    httpTestingController = TestBed.inject(HttpTestingController);
+    service = TestBed.inject(TermsService);
   });
 
   it('should be created', () => {

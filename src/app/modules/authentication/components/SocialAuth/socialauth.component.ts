@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { LoginService } from 'src/app/services/SocialAuth/socialauth.service';
 import {
-  AuthService,
   FacebookLoginProvider,
   GoogleLoginProvider,
+  SocialAuthService,
   SocialUser
-} from 'angularx-social-login';
+} from '@abacritt/angularx-social-login';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
+  standalone: false,
   selector: 'app-social-login',
   templateUrl: './socialauth.component.html',
   styleUrls: ['./socialauth.component.scss']
@@ -23,7 +24,7 @@ export class SocialLoginComponentt {
 
   // inject services and depe
   constructor(
-    private socialAuthService: AuthService,
+    private socialAuthService: SocialAuthService,
     private loginService: LoginService,
     private router: Router,
     private toastr: ToastrService,

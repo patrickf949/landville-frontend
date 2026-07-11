@@ -1,7 +1,7 @@
 import { mockReviewsResponse, reviewResponse } from 'src/app/helpers/tests/mocks';
 import { ClientReviewsService } from 'src/app/services/client-reviews/client-reviews.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { httpClientSpy, toastServiceSpy, reviewsSpy, resetSpies } from 'src/app/helpers/tests/spies';
 import { of, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -11,7 +11,6 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
-import { configureTestSuite } from 'ng-bullet';
 
 describe('ClientReviewsComponent', () => {
   let component: ClientReviewsComponent;
@@ -22,7 +21,7 @@ describe('ClientReviewsComponent', () => {
   beforeAll(() => resetSpies([reviewsSpy]));
   afterEach(() => resetSpies([reviewsSpy]));
 
-  configureTestSuite(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ClientReviewsComponent],
       imports: [
@@ -47,7 +46,7 @@ describe('ClientReviewsComponent', () => {
       ]
     })
       .compileComponents();
-  });
+  }));
 
 
   beforeEach(() => {
