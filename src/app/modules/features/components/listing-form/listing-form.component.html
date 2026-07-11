@@ -1,0 +1,180 @@
+<div class="container listing-form-page py-4">
+  <div class="page-head mb-4">
+    <h2>Create a listing</h2>
+    <p class="text-muted">
+      List your house, apartment, land or commercial space and connect
+      directly with people looking for it.
+    </p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Basics -->
+    <div class="form-card">
+      <h5><i class="fa fa-home mr-2"></i>The basics</h5>
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <label>Title *</label>
+          <input class="form-control" formControlName="title"
+                 placeholder="e.g. 3-bedroom bungalow in Gwarinpa" />
+        </div>
+        <div class="col-md-3 form-group">
+          <label>Listing type *</label>
+          <select class="form-control" formControlName="listing_type">
+            <option *ngFor="let t of listingTypes" [value]="t.value">{{ t.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-3 form-group">
+          <label>Property type *</label>
+          <select class="form-control" formControlName="property_type">
+            <option *ngFor="let t of propertyTypes" [value]="t.value">{{ t.label }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label>Price (₦) *</label>
+          <input type="number" class="form-control" formControlName="price" />
+        </div>
+        <div class="col-md-4 form-group" *ngIf="isRent">
+          <label>Rent period *</label>
+          <select class="form-control" formControlName="rent_period">
+            <option [ngValue]="null" disabled>Choose…</option>
+            <option *ngFor="let p of rentPeriods" [value]="p.value">{{ p.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-4 form-group">
+          <label>Lot size (acres) *</label>
+          <input type="number" step="0.01" class="form-control" formControlName="lot_size" />
+        </div>
+      </div>
+      <div class="row" *ngIf="!isLand">
+        <div class="col-4 form-group">
+          <label>Bedrooms</label>
+          <input type="number" class="form-control" formControlName="bedrooms" />
+        </div>
+        <div class="col-4 form-group">
+          <label>Bathrooms</label>
+          <input type="number" class="form-control" formControlName="bathrooms" />
+        </div>
+        <div class="col-4 form-group">
+          <label>Garages</label>
+          <input type="number" class="form-control" formControlName="garages" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea class="form-control" rows="4" formControlName="description"
+                  placeholder="Describe the property, its condition and what makes it a great deal (at least 30 characters)."></textarea>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="form-card">
+      <h5><i class="fa fa-map-marker-alt mr-2"></i>Location</h5>
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label>City *</label>
+          <input class="form-control" formControlName="city" />
+        </div>
+        <div class="col-md-4 form-group">
+          <label>State *</label>
+          <input class="form-control" formControlName="state" />
+        </div>
+        <div class="col-md-4 form-group">
+          <label>Street *</label>
+          <input class="form-control" formControlName="street" />
+        </div>
+      </div>
+      <p class="text-muted small mb-2">
+        Click the map (or drag the pin) to mark the exact spot.
+      </p>
+      <div class="map-holder mb-3">
+        <app-map mode="pick" [lat]="form.value.lat" [lon]="form.value.lon"
+                 (coordsChange)="onCoords($event)"></app-map>
+      </div>
+      <div class="row">
+        <div class="col-md-3 form-group">
+          <label>Distance to main road</label>
+          <select class="form-control" formControlName="distance_to_main_road">
+            <option [ngValue]="null">Not sure</option>
+            <option *ngFor="let d of roadDistances" [value]="d.value">{{ d.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-3 form-group">
+          <label>Distance to city / big town</label>
+          <select class="form-control" formControlName="distance_to_city">
+            <option [ngValue]="null">Not sure</option>
+            <option *ngFor="let d of cityDistances" [value]="d.value">{{ d.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-3 form-group">
+          <label>Noise level</label>
+          <select class="form-control" formControlName="noise_level">
+            <option [ngValue]="null">Not sure</option>
+            <option *ngFor="let n of noiseLevels" [value]="n.value">{{ n.label }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>What's nearby?</label>
+        <div class="chip-row">
+          <button type="button" class="chip"
+                  *ngFor="let f of nearbyFeatures"
+                  [class.active]="selectedNearby.has(f.id)"
+                  (click)="toggle(selectedNearby, f.id)">
+            <i class="fa {{ f.icon }} mr-1"></i>{{ f.name }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Amenities -->
+    <div class="form-card">
+      <h5><i class="fa fa-check-circle mr-2"></i>Amenities</h5>
+      <div class="chip-row">
+        <button type="button" class="chip"
+                *ngFor="let a of visibleAmenities"
+                [class.active]="selectedAmenities.has(a.id)"
+                (click)="toggle(selectedAmenities, a.id)">
+          <i class="fa {{ a.icon }} mr-1"></i>{{ a.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Photos -->
+    <div class="form-card">
+      <h5><i class="fa fa-camera mr-2"></i>Photos <small class="text-muted">(up to {{ maxPhotos }})</small></h5>
+      <input type="file" id="photo-input" accept="image/png,image/jpeg"
+             multiple hidden (change)="onPhotosSelected($event)" />
+      <label for="photo-input" class="btn btn-outline-primary"
+             [class.disabled]="photos.length >= maxPhotos">
+        <i class="fa fa-plus mr-1"></i>Add photos
+      </label>
+      <div class="photo-grid mt-3" *ngIf="photoPreviews.length">
+        <div class="photo-cell" *ngFor="let preview of photoPreviews; let i = index"
+             [class.main]="i === mainPhotoIndex">
+          <img [src]="preview" alt="Photo {{ i + 1 }}" />
+          <div class="photo-actions">
+            <button type="button" class="btn btn-sm btn-light"
+                    (click)="mainPhotoIndex = i"
+                    [disabled]="i === mainPhotoIndex">
+              <i class="fa fa-star"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-light" (click)="removePhoto(i)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+          <span class="main-badge" *ngIf="i === mainPhotoIndex">Main photo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-right pb-5">
+      <button type="submit" class="btn btn-primary btn-lg px-5"
+              [disabled]="submitting">
+        <span *ngIf="!submitting">Publish listing</span>
+        <span *ngIf="submitting"><i class="fa fa-spinner fa-spin mr-1"></i>Publishing…</span>
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,61 @@
+<div class="container py-4 my-listings-page">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>My listings</h2>
+      <p class="text-muted mb-0">Manage the properties you have listed on Atterville.</p>
+    </div>
+    <a routerLink="/create-listing" class="btn btn-primary">
+      <i class="fa fa-plus mr-1"></i>New listing
+    </a>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+  </div>
+
+  <div *ngIf="!loading && !listings.length" class="empty-state text-center py-5">
+    <i class="fa fa-home fa-3x mb-3"></i>
+    <h5>No listings yet</h5>
+    <p class="text-muted">Create your first listing and start connecting with seekers.</p>
+    <a routerLink="/create-listing" class="btn btn-outline-primary">Create a listing</a>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let listing of listings">
+      <div class="listing-card">
+        <div class="thumb">
+          <img [src]="listing.image_main" [alt]="listing.title" />
+          <span class="badge-status" [class.closed]="listing.status !== 'Available'">
+            {{ listing.status }}
+          </span>
+        </div>
+        <div class="body">
+          <h6 class="title">{{ listing.title }}</h6>
+          <p class="meta">
+            {{ listing.listing_type }} · {{ listing.property_type }} ·
+            ₦{{ listing.price | number }}
+          </p>
+          <div class="actions">
+            <a [routerLink]="['/properties', listing.slug]"
+               class="btn btn-sm btn-outline-secondary">View</a>
+            <button *ngIf="listing.status === 'Available' && listing.listing_type === 'Rent'"
+                    class="btn btn-sm btn-outline-primary" (click)="markAs(listing, 'RE')">
+              Mark rented
+            </button>
+            <button *ngIf="listing.status === 'Available' && listing.listing_type === 'Sale'"
+                    class="btn btn-sm btn-outline-primary" (click)="markAs(listing, 'SO')">
+              Mark sold
+            </button>
+            <button *ngIf="listing.status !== 'Available'"
+                    class="btn btn-sm btn-outline-success" (click)="markAs(listing, 'AV')">
+              Relist
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="remove(listing)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

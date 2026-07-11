@@ -1,0 +1,33 @@
+<div class="container py-4 inbox-page">
+  <h2 class="mb-1">Messages</h2>
+  <p class="text-muted mb-4">Your conversations with owners and seekers.</p>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+  </div>
+
+  <div *ngIf="!loading && !conversations.length" class="empty-state text-center py-5">
+    <i class="fa fa-comments fa-3x mb-3"></i>
+    <h5>No conversations yet</h5>
+    <p class="text-muted">
+      Open any listing and hit “Chat with owner” to start one.
+    </p>
+    <a routerLink="/properties" class="btn btn-outline-primary">Browse properties</a>
+  </div>
+
+  <a class="conversation-row" *ngFor="let convo of conversations"
+     [routerLink]="['/messages', convo.id]">
+    <img class="thumb" [src]="convo.listing?.image_main" alt="" />
+    <div class="content">
+      <div class="d-flex justify-content-between">
+        <strong>{{ convo.other_party?.first_name || convo.other_party?.email }}</strong>
+        <small class="text-muted">{{ convo.updated_at | date:'MMM d, HH:mm' }}</small>
+      </div>
+      <div class="listing-title">{{ convo.listing?.title }}</div>
+      <div class="preview" [class.unread]="convo.unread_count > 0">
+        {{ convo.last_message?.body || 'No messages yet' | slice:0:80 }}
+      </div>
+    </div>
+    <span class="unread-pill" *ngIf="convo.unread_count > 0">{{ convo.unread_count }}</span>
+  </a>
+</div>
