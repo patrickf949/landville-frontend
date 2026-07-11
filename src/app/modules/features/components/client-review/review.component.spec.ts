@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -10,7 +10,6 @@ import { routerSpy, toastServiceSpy, spinnerSpy, clientReviewService } from 'src
 
 import { ReviewComponent } from 'src/app/modules/features/components/client-review/review.component';
 
-import { configureTestSuite } from 'ng-bullet';
 
 describe('ReviewComponent', () => {
   let component: ReviewComponent;
@@ -21,7 +20,7 @@ describe('ReviewComponent', () => {
   const mockreviewService = clientReviewService;
   const mockactivatedRoute = routerSpy;
 
-  configureTestSuite(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ReviewComponent],
       imports: [
@@ -44,7 +43,7 @@ describe('ReviewComponent', () => {
       ]
     })
       .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ReviewComponent);
@@ -58,7 +57,7 @@ describe('ReviewComponent', () => {
   it('should have a review field', () => {
     expect(component.review).toBeTruthy();
   });
-  it('should trigger onsubmit method', async(() => {
+  it('should trigger onsubmit method', waitForAsync(() => {
     component.submitReview();
     expect(component.submitReview).toBeTruthy();
   }));

@@ -7,6 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { noWhitespaceValidator } from 'src/app/helpers/validators/no-whitespace-validator'
 
 @Component({
+  standalone: false,
   selector: 'app-review',
   templateUrl: './review.component.html',
   styleUrls: ['./review.component.scss']
