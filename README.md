@@ -1,4 +1,4 @@
-# AttervilleFrontend [![CircleCI](https://circleci.com/gh/Attervilleng/Atterville-frontend.svg?style=svg)](https://circleci.com/gh/Attervilleng/Atterville-frontend) [![Coverage Status](https://coveralls.io/repos/github/Attervilleng/Atterville-frontend/badge.svg)](https://coveralls.io/github/Attervilleng/Atterville-frontend)  <a href="https://codeclimate.com/github/Attervilleng/Atterville-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/63814c9811ef8dde1aeb/maintainability" /></a>
+# LandVilleFrontend [![CircleCI](https://circleci.com/gh/LandVilleng/LandVille-frontend.svg?style=svg)](https://circleci.com/gh/LandVilleng/LandVille-frontend) [![Coverage Status](https://coveralls.io/repos/github/LandVilleng/LandVille-frontend/badge.svg)](https://coveralls.io/github/LandVilleng/LandVille-frontend)  <a href="https://codeclimate.com/github/LandVilleng/LandVille-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/63814c9811ef8dde1aeb/maintainability" /></a>
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.3.
 
@@ -8,7 +8,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Production server
 
-Navigate to `https://Atterville-frontend.herokuapp.com/` and you'll be served with this application's frontend interface.
+Navigate to `https://LandVille-frontend.herokuapp.com/` and you'll be served with this application's frontend interface.
 
 ## Code scaffolding
 
