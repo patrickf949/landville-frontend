@@ -41,7 +41,7 @@ export class PublicProfileComponent implements OnInit {
           this.profile = res?.data?.profile ?? null;
           this.listings = this.profile?.active_listings ?? [];
           const name = this.fullName || 'Member';
-          this.titleService.setTitle(`${name}'s listings | Atterville`);
+          this.titleService.setTitle(`${name}'s listings | LandVille`);
         },
         error: () => {
           this.notFound = true;

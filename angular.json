@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "atterville-frontend": {
+    "landville-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/atterville-frontend",
+            "outputPath": "dist/landville-frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -79,10 +79,10 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "atterville-frontend:build:production"
+              "buildTarget": "landville-frontend:build:production"
             },
             "development": {
-              "buildTarget": "atterville-frontend:build:development"
+              "buildTarget": "landville-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -93,7 +93,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "buildTarget": "atterville-frontend:build:development",
+            "buildTarget": "landville-frontend:build:development",
             "runner": "vitest",
             "runnerConfig": false,
             "tsConfig": "tsconfig.spec.json",

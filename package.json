@@ -1,5 +1,5 @@
 {
-  "name": "atterville-frontend",
+  "name": "landville-frontend",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -8,8 +8,8 @@
     "build:browser": "ng build",
     "build": "ng build",
     "test": "ng test",
-    "serve": "node dist/atterville-frontend/server/server.mjs",
-    "serve:ssr": "node dist/atterville-frontend/server/server.mjs",
+    "serve": "node dist/landville-frontend/server/server.mjs",
+    "serve:ssr": "node dist/landville-frontend/server/server.mjs",
     "build:ssr": "ng build",
     "install:clean": "rimraf node_modules package-lock.json && npm install"
   },

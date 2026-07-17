@@ -12,7 +12,7 @@ export const AuthLayoutRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    data: { title: 'Atterville | Make it yours Today' }
+    data: { title: 'LandVille | Make it yours Today' }
   },
   {
     path: 'register',

@@ -17,7 +17,7 @@ export class TermsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title.setTitle('Atterville Terms and Conditions of Use')
+    this.title.setTitle('LandVille Terms and Conditions of Use')
     this.terms = this.termsService.getTerms();
 
   }

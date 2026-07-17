@@ -36,7 +36,7 @@ const routes: Routes = [
     path: 'terms-and-conditions',
     component: TermsPageComponent,
     data: {
-      title: 'Atterville Terms and Conditions of Use',
+      title: 'LandVille Terms and Conditions of Use',
       tags: [],
     },
   },
@@ -61,14 +61,14 @@ const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     data: {
-      title: 'Atterville helps you access real estate and property investing in Nigeria.' +
+      title: 'LandVille helps you access real estate and property investing in Nigeria.' +
         ' Make the best and safest decision. ' +
         'Let tech help you find your dream Property today',
       tags: [
         // Open Graph Data
         {
           property: 'og:title',
-          content: 'Atterville | Find your dream property today',
+          content: 'LandVille | Find your dream property today',
         },
         {
           property: 'og:description',
@@ -89,7 +89,7 @@ const routes: Routes = [
         },
         {
           name: 'twitter:title',
-          content: 'Atterville | Find your dream Property today',
+          content: 'LandVille | Find your dream Property today',
         },
         {
           name: 'twitter:description',
@@ -108,7 +108,7 @@ const routes: Routes = [
           content: 'Browse a wide range of the best property across Nigeria'
         },
         { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'Atterville' },
+        { property: 'og:site_name', content: 'LandVille' },
         { name: 'og:image', content: 'assets/img/ICON/Logo.png' },
         // Twitter
         { name: 'twitter:card', content: 'summary' },
@@ -129,7 +129,7 @@ const routes: Routes = [
         },
         // Twitter
         { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'Atterville' },
+        { property: 'og:site_name', content: 'LandVille' },
         // Twitter
         { name: 'twitter:card', content: 'summary' },
         { name: 'twitter:image', content: 'assets/img/ICON/Logo.png' },
@@ -141,11 +141,11 @@ const routes: Routes = [
   { path: 'no-properties', component: NoPropertiesComponent },
   {
     path: 'user/:id', component: PublicProfileComponent, data: {
-      title: 'Member profile | Atterville',
+      title: 'Member profile | LandVille',
       tags: [
-        { property: 'og:title', content: 'Member profile | Atterville' },
-        { property: 'og:description', content: 'See this member\'s available listings on Atterville' },
-        { property: 'og:site_name', content: 'Atterville' },
+        { property: 'og:title', content: 'Member profile | LandVille' },
+        { property: 'og:description', content: 'See this member\'s available listings on LandVille' },
+        { property: 'og:site_name', content: 'LandVille' },
       ]
     }
   },

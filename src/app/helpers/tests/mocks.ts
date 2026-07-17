@@ -17,7 +17,7 @@ export const mockUpdatedProfileResponse: UserProfileUpdatedResponse = {
         State: 'Nairobi'
       },
       phone: '34555435354345',
-      employer: 'Atterville',
+      employer: 'LandVille',
       designation: 'Boss',
       next_of_kin: 'Kin',
       next_of_kin_contact: '32425435345',

@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       icon: 'fa-comments',
       title: 'Talk directly',
       text: 'Chat with the owner in real time — no middlemen, no agents, '
-        + 'no fees. Atterville simply connects you.'
+        + 'no fees. LandVille simply connects you.'
     }
   ];
 
