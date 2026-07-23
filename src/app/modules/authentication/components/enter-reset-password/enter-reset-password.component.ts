@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { EnterResetPasswordService } from 'src/app/services/password/enter-reset-password.service';
 import { ToastrService } from 'ngx-toastr';
 
+import { extractErrorMessage } from 'src/app/helpers/error-handler';
+
 @Component({
   standalone: false,
   selector: 'app-enter-reset-password',
@@ -70,12 +72,7 @@ export class EnterResetPasswordComponent implements OnInit {
     }, err => {
       this.loading = false;
       this.success = false;
-      if (err.errors.password) {
-        this.message = err.errors.password
-      } else {
-        this.message = err.errors.token
-      }
-      this.toastrService.error(this.message, '');
+      this.toastrService.error(extractErrorMessage(err), '');
     });
 
     this.disabled = true;

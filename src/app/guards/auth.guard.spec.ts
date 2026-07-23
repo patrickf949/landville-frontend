@@ -15,7 +15,7 @@ describe('AuthGuard', () => {
       imports: [RouterTestingModule],
       providers: [
         LocalStorageService,
-        { provide: { AuthService, useValue: MockAuthService } },
+        { provide: AuthService, useValue: MockAuthService },
       ]
     });
     guard = new AuthGuard(MockAuthService, routerSpy);
@@ -32,7 +32,7 @@ describe('AuthGuard', () => {
     const next = {
       url: '/'
     };
-    const state = null;
+    const state = { url: '/' };
     MockAuthService.isLoggedIn.and.returnValue(true);
     expect(guard.canActivate(next, state)).toBeTruthy();
   });
@@ -41,7 +41,7 @@ describe('AuthGuard', () => {
     const next = {
       url: '/'
     };
-    const state = null;
+    const state = { url: '/' };
     MockAuthService.isLoggedIn.and.returnValue(false);
     expect(guard.canActivate(next, state)).toBeFalsy();
   });

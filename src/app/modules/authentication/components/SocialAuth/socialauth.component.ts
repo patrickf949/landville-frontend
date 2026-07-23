@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+
 @Component({
   standalone: false,
   selector: 'app-social-login',
@@ -28,7 +30,8 @@ export class SocialLoginComponentt {
     private loginService: LoginService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private localStorageService: LocalStorageService
   ) { }
   signInWithGoogle() {
     this.spinner.show();
@@ -41,7 +44,7 @@ export class SocialLoginComponentt {
           })
           .subscribe(result => {
             this.spinner.hide();
-            localStorage.setItem('token', result.token);
+            this.localStorageService.set('token', result.token);
             this.router.navigate(['/home']);
           });
       })
@@ -62,7 +65,7 @@ export class SocialLoginComponentt {
           })
           .subscribe(result => {
             this.spinner.hide();
-            localStorage.setItem('token', result.token);
+            this.localStorageService.set('token', result.token);
             this.router.navigate(['/home']);
           });
       })

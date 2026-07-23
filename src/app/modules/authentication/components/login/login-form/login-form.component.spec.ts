@@ -83,7 +83,7 @@ describe('LoginFormComponent', () => {
     loginServiceSpy.login.and.returnValue(throwError(loginError));
     component.onLogin(loginData);
     expect(toastServiceSpy.error).toHaveBeenCalledWith(
-      'Invalid email and password combination'
+      'Invalid: invalid email and password combination'
     );
   });
   it('should call login method', () => {

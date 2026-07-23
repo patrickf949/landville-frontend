@@ -6,6 +6,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 
+import { extractErrorMessage } from 'src/app/helpers/error-handler';
+
 @Component({
   standalone: false,
   selector: 'app-registration',
@@ -43,8 +45,8 @@ export class RegistrationComponent implements OnInit {
         this.router.navigate(['registersuccess']);
       },
       error => {
-        this.toastrService.error(error.error.errors.email[0]);
         this.spinner.hide();
+        this.toastrService.error(extractErrorMessage(error));
       }
     );
 

@@ -117,7 +117,7 @@ describe('RegistrationComponent', () => {
     registerServiceSpy.registerUser.and.returnValue(throwError(errorMessage));
     component.registerUser(User);
     expect(toastServiceSpy.error).toHaveBeenCalledWith(
-      errorMessage.error.errors.email[0]
+      `Email: ${errorMessage.error.errors.email[0]}`
     );
   });
 });

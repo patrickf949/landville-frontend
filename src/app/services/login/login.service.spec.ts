@@ -10,8 +10,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { toastServiceSpy, httpServiceSpy } from 'src/app/helpers/tests/spies';
 import { HttpClient } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
-
-
+import { HttpService } from 'src/app/services/http.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 describe('LoginService', () => {
   let httpTestingController: HttpTestingController;
   let logInService: LoginService;
@@ -22,7 +22,8 @@ describe('LoginService', () => {
       providers: [
         LoginService,
         { provide: ToastrService, useValue: toastServiceSpy },
-        { provide: HttpClient, useValue: httpServiceSpy}
+        { provide: HttpService, useValue: httpServiceSpy},
+        LocalStorageService
       ],
       imports: [
         HttpClientTestingModule,
@@ -49,12 +50,10 @@ describe('LoginService', () => {
   it('should use the service', () => {
     const { userService } = setup();
     const mockUser = { name: 'Serem' };
-    spyOn(userService, 'login').and.returnValue(
-      Observable.create((observer: Observer<{ name: string }>) => {
-        observer.next(mockUser);
-        return observer;
-      })
-    );
+    spyOn(userService, 'login').and.returnValue(of(mockUser));
+    userService.login({} as any).subscribe(user => {
+      expect(user).toEqual(mockUser);
+    });
   });
   it('should be created', () => {
     const service: LoginService = TestBed.inject(LoginService);
@@ -79,6 +78,7 @@ describe('LoginService', () => {
     const data = {
       message: 'Successful Logout'
     };
+    httpServiceSpy.makeRequestWithData.and.returnValue(of(data));
     logInService.logoutUser().subscribe((payload) => {
       expect(payload).toEqual(data);
     });

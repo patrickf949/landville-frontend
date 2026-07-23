@@ -6,13 +6,14 @@ import { of } from 'rxjs';
 import { JwtInterceptor } from 'src/app/interceptors/jwt/jwt.interceptor';
 
 const mockAuthService = jasmine.createSpyObj(['isLoggedIn']);
+const mockLocalStorageService = jasmine.createSpyObj(['get']);
 
 describe('JWTInterceptor', () => {
   let jwtInterceptor: JwtInterceptor;
 
 
   beforeEach(() => {
-    jwtInterceptor = new JwtInterceptor(mockAuthService);
+    jwtInterceptor = new JwtInterceptor(mockAuthService, mockLocalStorageService as any);
 
     TestBed.configureTestingModule({
       providers: [
@@ -39,7 +40,7 @@ describe('JWTInterceptor', () => {
     jwtInterceptor.intercept(httpRequestSpy, httpHandlerSpy)
       .subscribe(
         result => {
-
+          expect(result).toBeTruthy();
         },
       );
   });

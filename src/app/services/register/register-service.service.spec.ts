@@ -32,6 +32,7 @@ describe('RegisterServiceService', () => {
     };
     service.registerUser(mockData).subscribe();
     const req = httpMock.expectOne({url});
+    expect(req.request.url).toEqual(url);
     req.flush(mockData);
     });
   it('should use the right url', () => {
@@ -44,7 +45,7 @@ describe('RegisterServiceService', () => {
     };
     service.registerUser(mockData).subscribe();
     const req = httpMock.expectOne({url});
-    // expect(req.request.url).toBe({});
+    expect(req.request.url).toEqual(url);
   });
   it('should use POST method', () => {
     const service: RegisterServiceService = TestBed.inject(RegisterServiceService);

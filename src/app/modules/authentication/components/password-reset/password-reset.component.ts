@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Title } from '@angular/platform-browser';
 
+import { extractErrorMessage } from 'src/app/helpers/error-handler';
+
 @Component({
   standalone: false,
   selector: 'app-password-reset',
@@ -50,9 +52,7 @@ export class PasswordResetComponent implements OnInit {
     }, err => {
       this.loading = false;
       this.success = false;
-      if (err.errors) {
-        this.toastrService.error(err.errors.email, '');
-      }
+      this.toastrService.error(extractErrorMessage(err), '');
     }
     );
     this.disabled = true;

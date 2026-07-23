@@ -27,6 +27,7 @@ describe('TermsService', () => {
       const url = environment.api_url + '/terms/';
       service.getTerms().subscribe();
       const req = httpTestingController.expectOne(url);
+      expect(req.request.method).toBe('GET');
       req.flush({ details: 'hello', last_updated_at: '10102019' });
       httpTestingController.verify()
     }

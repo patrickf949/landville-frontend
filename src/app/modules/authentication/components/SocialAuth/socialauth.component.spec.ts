@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed , waitForAsync} from '@angular/core/testing';
 import { SocialLoginComponentt } from 'src/app/modules/authentication/components/SocialAuth/socialauth.component';
-import { AuthService } from '@abacritt/angularx-social-login';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { authServiceSpy, loginServiceSpy, resetSpies } from 'src/app/helpers/tests/social.spies';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
@@ -20,6 +20,7 @@ import {
 } from 'src/app/modules/authentication/components/enter-reset-password/enter-reset-password.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { userData } from 'src/app/helpers/tests/mocks';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 describe('SocialLoginComponentt', () => {
   let component: SocialLoginComponentt;
@@ -49,7 +50,8 @@ describe('SocialLoginComponentt', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        {provide: AuthService, useValue: authServiceSpy},
+        LocalStorageService,
+        {provide: SocialAuthService, useValue: authServiceSpy},
         {provide: LoginService, useValue: loginServiceSpy}
       ]
     }).compileComponents().then(r => {});

@@ -26,6 +26,7 @@ describe('PasswordResetService', () => {
     };
     service.getResetLink(mockData).subscribe();
     const req = httpMock.expectOne(url);
+    expect(req.request.url).toEqual(url);
     req.flush(mockData);
     });
 

@@ -27,6 +27,7 @@ describe('EnterResetPasswordService', () => {
     };
     service.changePassword('token', mockData).subscribe();
     const req = httpMock.expectOne(url);
+    expect(req.request.url).toEqual(url);
     req.flush(mockData);
     });
 });

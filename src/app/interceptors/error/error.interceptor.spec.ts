@@ -42,7 +42,9 @@ describe('ErrorInterceptor', () => {
         err => {
           console.log('error', err);
           expect(err).toEqual({
-            message: 'test-error'
+            error: {
+              message: 'test-error'
+            }
           });
         }
       );

@@ -17,16 +17,21 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(catchError(err => {
       if (err.status === 401) {
-        // auto logout if 401 response returned from api
-        this.subscription.add(this.loginService.logoutUser().subscribe(_ => {
-          this.localStorageService.clear();
-          this.router.navigate(['/login']);
-        }));
+        // Clear local storage and navigate first so the UI responds immediately
+        this.localStorageService.clear();
+        this.router.navigate(['/login'], { queryParams: { next: this.router.url } });
+        
+        // Attempt to notify the backend, but only if this wasn't the logout request itself
+        if (!req.url.includes('/auth/logout/')) {
+          this.loginService.logoutUser().subscribe({
+            next: () => {},
+            error: () => {}
+          });
+        }
       }
 
-      this.subscription.unsubscribe();
       const error = err.error || err.statusText;
-      return throwError(error);
+      return throwError(() => err);
     }));
   }
 
