@@ -1,0 +1,35 @@
+<div class="saved-properties container py-4">
+  <div class="d-flex align-items-center mb-4">
+    <h5 class="mb-0"><i class="fa fa-heart text-warning mr-2"></i> Saved Properties</h5>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+    <p class="text-muted mt-2">Loading your saved properties…</p>
+  </div>
+
+  <div *ngIf="!isLoading && savedProperties.length === 0" class="text-center py-5 empty-state">
+    <i class="fa fa-folder-open fa-3x text-muted mb-3"></i>
+    <h4>No saved properties yet</h4>
+    <p class="text-muted">Properties you save will appear here.</p>
+    <a routerLink="/properties" class="btn btn-outline-primary mt-2">Browse properties</a>
+  </div>
+
+  <div class="row" *ngIf="!isLoading && savedProperties.length > 0">
+    <div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let property of savedProperties">
+      <a [routerLink]="['/properties', property.slug]" class="custom-card">
+        <app-card
+          [imageMain]="property.image_main"
+          [title]="property.title"
+          [street]="property.address?.Street"
+          [city]="property.address?.City"
+          [price]="property.price"
+          [bedrooms]="property.bedrooms"
+          [bathrooms]="property.bathrooms"
+          [garages]="property.garages"
+          [lotSize]="property.lot_size"
+        ></app-card>
+      </a>
+    </div>
+  </div>
+</div>

@@ -77,5 +77,6 @@ describe('ReviewComponent', () => {
     component = new ReviewComponent(mockreviewService, mockSpinner, mockToastr, mockRouter, mockactivatedRoute);
     mockreviewService.createClientReview.and.returnValue(throwError({ status: 404, errors: { detail: undefined } }));
     component.submitReview();
+    expect(mockToastr.error).toHaveBeenCalled();
   });
 });

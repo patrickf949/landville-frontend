@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { finalize } from 'rxjs/operators';
@@ -19,7 +19,8 @@ export class PublicProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private profileService: ProfileService,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -35,16 +36,21 @@ export class PublicProfileComponent implements OnInit {
     this.loading = true;
     this.notFound = false;
     this.profileService.getPublicProfile(id)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => {
+        this.loading = false;
+        this.cdr.detectChanges();
+      }))
       .subscribe({
         next: res => {
           this.profile = res?.data?.profile ?? null;
           this.listings = this.profile?.active_listings ?? [];
           const name = this.fullName || 'Member';
           this.titleService.setTitle(`${name}'s listings | LandVille`);
+          this.cdr.detectChanges();
         },
         error: () => {
           this.notFound = true;
+          this.cdr.detectChanges();
         }
       });
   }

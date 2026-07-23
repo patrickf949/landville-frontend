@@ -85,7 +85,7 @@
               <p class="card-text">
                 <b aria-hidden="true">&#8358; </b> {{ property.price | number }}
               </p>
-              <a [routerLink]="['/properties', property.slug]" class="btn btn-warning">
+              <a [routerLink]="['/properties', property.slug]" class="btn btn-warning view-btn">
                 View
               </a>
             </div>
@@ -128,7 +128,7 @@
         </div>
       </div>
     </div>
-    <a routerLink="/properties" class="btn btn-primary btn-lg mt-3 px-5">
+    <a routerLink="/properties" class="btn btn-primary btn-lg mt-3 px-5 btn-browse">
       Browse properties
     </a>
   </div>

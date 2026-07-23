@@ -101,16 +101,15 @@ describe('ProfileSidebarComponent', () => {
   }));
   it('should store image in localStorage if the user has an image', () => {
     component.setImage(mockProfileResponse.data.profile);
-    expect(localStorage.getItem('profileImage')).toEqual(
+    expect(localStorageSpy.set).toHaveBeenCalledWith(
+      'profileImage',
       mockProfileResponse.data.profile.image
     );
   });
   it('should first check the localStorage to get the profile image', () => {
     localStorageSpy.get.and.returnValue('https:dummyimage.com/300');
     component.setImage(mockProfileResponse.data.profile);
-    expect(localStorage.getItem('profileImage')).toBe(
-      mockProfileResponse.data.profile.image
-    );
+    expect(localStorageSpy.get).toHaveBeenCalledWith('profileImage', '');
   });
   it('should generate random image for users who have no profile image', () => {
     profileServiceSpy.getProfile.and.returnValue(

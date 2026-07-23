@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -62,7 +62,8 @@ export class ListingFormComponent implements OnInit {
     private propertiesService: PropertiesService,
     private toastr: ToastrService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(255)]],
@@ -88,9 +89,15 @@ export class ListingFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.propertiesService.getAmenities().subscribe(
-      (data: any) => this.amenities = data || []);
+      (data: any) => {
+        this.amenities = data || [];
+        this.cdr.detectChanges();
+      });
     this.propertiesService.getNearbyFeatures().subscribe(
-      (data: any) => this.nearbyFeatures = data || []);
+      (data: any) => {
+        this.nearbyFeatures = data || [];
+        this.cdr.detectChanges();
+      });
     this.form.get('listing_type').valueChanges.subscribe(value => {
       const rentPeriod = this.form.get('rent_period');
       if (value === 'R') {
@@ -100,6 +107,7 @@ export class ListingFormComponent implements OnInit {
         rentPeriod.setValue(null);
       }
       rentPeriod.updateValueAndValidity();
+      this.cdr.detectChanges();
     });
   }
 
@@ -132,6 +140,10 @@ export class ListingFormComponent implements OnInit {
   onPhotosSelected(event: any): void {
     const files: File[] = Array.from(event.target.files || []);
     for (const file of files) {
+      if (file.size > 500 * 1024) {
+        this.toastr.error(`The photo "${file.name}" exceeds the 500KB limit.`);
+        continue;
+      }
       if (this.photos.length >= this.maxPhotos) {
         this.toastr.warning(
           `You can upload a maximum of ${this.maxPhotos} photos.`);
@@ -139,10 +151,14 @@ export class ListingFormComponent implements OnInit {
       }
       this.photos.push(file);
       const reader = new FileReader();
-      reader.onload = () => this.photoPreviews.push(reader.result as string);
+      reader.onload = () => {
+        this.photoPreviews.push(reader.result as string);
+        this.cdr.detectChanges();
+      };
       reader.readAsDataURL(file);
     }
     event.target.value = '';
+    this.cdr.detectChanges();
   }
 
   removePhoto(index: number): void {
@@ -151,16 +167,31 @@ export class ListingFormComponent implements OnInit {
     if (this.mainPhotoIndex >= this.photos.length) {
       this.mainPhotoIndex = 0;
     }
+    this.cdr.detectChanges();
   }
 
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.toastr.error('Please complete all the required fields.');
+      this.cdr.detectChanges();
+      
+      // Auto-scroll to the first invalid control
+      const firstInvalidControl: HTMLElement = document.querySelector('form .ng-invalid');
+      if (firstInvalidControl) {
+        firstInvalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
     if (!this.photos.length) {
       this.toastr.error('Please add at least one photo of the property.');
+      this.cdr.detectChanges();
+      
+      // Auto-scroll to the photo upload area
+      const photoUploadArea: HTMLElement = document.querySelector('.photo-upload-area');
+      if (photoUploadArea) {
+        photoUploadArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
     const value = this.form.value;
@@ -204,6 +235,7 @@ export class ListingFormComponent implements OnInit {
       next: () => {
         this.toastr.success('Your listing has been created!');
         this.router.navigate(['/my-listings']);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.submitting = false;
@@ -211,6 +243,7 @@ export class ListingFormComponent implements OnInit {
         const first = Object.values(errors)[0];
         this.toastr.error(
           Array.isArray(first) ? String(first[0]) : String(first || 'Something went wrong. Please try again.'));
+        this.cdr.detectChanges();
       }
     });
   }

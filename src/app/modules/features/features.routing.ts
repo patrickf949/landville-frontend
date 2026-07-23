@@ -6,6 +6,9 @@ import { ListingFormComponent } from 'src/app/modules/features/components/listin
 import { MyListingsComponent } from 'src/app/modules/features/components/my-listings/my-listings.component';
 import { InboxComponent } from 'src/app/modules/features/components/chat/inbox/inbox.component';
 import { ThreadComponent } from 'src/app/modules/features/components/chat/thread/thread.component';
+import { CheckoutComponent } from 'src/app/modules/features/components/payment/checkout/checkout.component';
+import { TransactionHistoryComponent } from 'src/app/modules/features/components/payment/transaction-history/transaction-history.component';
+import { SavedPropertiesComponent } from 'src/app/modules/features/components/saved-properties/saved-properties.component';
 
 export const CommonLayoutRoutes: Routes = [
   {
@@ -32,7 +35,24 @@ export const CommonLayoutRoutes: Routes = [
     data: { title: 'Conversation' },
     canActivate: [AuthGuard]
   },
-  
+  {
+    path: 'checkout/:slug',
+    component: CheckoutComponent,
+    data: { title: 'Checkout' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'transactions',
+    component: TransactionHistoryComponent,
+    data: { title: 'Transaction History' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'saved-properties',
+    component: SavedPropertiesComponent,
+    data: { title: 'Saved Properties' },
+    canActivate: [AuthGuard]
+  },
   {
     path: 'profile',
     component: ProfileComponent,
@@ -41,13 +61,6 @@ export const CommonLayoutRoutes: Routes = [
     },
     canActivate: [AuthGuard],
   },
-  
-  
-  
-  
-  
-  
-  
   {
     path: 'client/:clientId/review',
     component: ReviewComponent,

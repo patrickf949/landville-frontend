@@ -107,6 +107,34 @@
 
       &:hover { text-decoration: underline; }
     }
+
+    .btn {
+      border-radius: 8px !important;
+      height: 2.8rem !important;
+      font-weight: 600 !important;
+      margin-bottom: 0.75rem !important;
+      margin-top: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+
+      &:last-of-type {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    .btn-warning {
+      background-color: #f8c302 !important;
+      border-color: #f8c302 !important;
+      color: #201541 !important;
+
+      &:hover {
+        background-color: #ee9619 !important;
+        border-color: #ee9619 !important;
+        color: #fff !important;
+      }
+    }
   }
 }
 

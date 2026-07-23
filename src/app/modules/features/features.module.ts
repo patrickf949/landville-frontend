@@ -18,6 +18,10 @@ import { ListingFormComponent } from 'src/app/modules/features/components/listin
 import { MyListingsComponent } from 'src/app/modules/features/components/my-listings/my-listings.component';
 import { InboxComponent } from 'src/app/modules/features/components/chat/inbox/inbox.component';
 import { ThreadComponent } from 'src/app/modules/features/components/chat/thread/thread.component';
+import { CheckoutComponent } from 'src/app/modules/features/components/payment/checkout/checkout.component';
+import { TransactionHistoryComponent } from 'src/app/modules/features/components/payment/transaction-history/transaction-history.component';
+
+import { SavedPropertiesComponent } from 'src/app/modules/features/components/saved-properties/saved-properties.component';
 
 @NgModule({
   imports: [
@@ -38,7 +42,10 @@ import { ThreadComponent } from 'src/app/modules/features/components/chat/thread
     ListingFormComponent,
     MyListingsComponent,
     InboxComponent,
-    ThreadComponent
+    ThreadComponent,
+    CheckoutComponent,
+    TransactionHistoryComponent,
+    SavedPropertiesComponent
   ],
   providers: [ProfileService, LocalStorageService, Title]
 })

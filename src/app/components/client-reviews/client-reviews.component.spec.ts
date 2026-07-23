@@ -83,7 +83,7 @@ describe('ClientReviewsComponent', () => {
     );
     component.fetchReviews(url);
     expect(toastServiceSpy.error).toHaveBeenCalledWith(
-      'No reviews yet'
+      'Details: No reviews yet'
     );
   });
 });

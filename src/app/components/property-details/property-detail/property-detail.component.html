@@ -1,55 +1,58 @@
-<div class="card my-5">
-    <div class="card-header">
-        <h5><b>{{title}}</b></h5>
-        <div style="margin-top:-1%;" class="address">
-            <b><i class="fa fa-map-marker"></i></b>
-            {{state}}, {{city}}
+<div class="property-detail-container mb-4">
+  <!-- Title, Address, Price block -->
+  <div class="detail-header mb-3">
+    <div class="d-flex justify-content-between align-items-start flex-wrap style-header">
+      <div>
+        <h2 class="property-title mb-1 font-weight-bold">{{title}}</h2>
+        <div class="property-location address">
+          <i class="fa fa-map-marker-alt text-warning mr-1"></i>
+          {{street ? street + ', ' : ''}}{{city}}, {{state}}
         </div>
-        <h5 class="price"><b>&#8358; {{price}}</b></h5>
+      </div>
+      <div class="text-md-right mt-2 mt-md-0">
+        <span class="price-label d-block text-muted small">Price</span>
+        <h3 class="property-price font-weight-bold">&#8358; {{price | number}}</h3>
+      </div>
     </div>
-    <div class="card-body">
-        <div id="carouselExampleControls" class="carousel slide carousel-fade" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="{{imageMain}}" class="d-block w-100" class="img-fluid" alt="Image">
-                </div>
-                <div class="carousel-item" *ngFor="let image of imageOthers">
-                    <img src="{{image}}" class="d-block w-100" class="img-fluid" alt="Image">
-                </div>
-            </div>
-            <a *ngIf="imageOthers.length > 0" class="carousel-control-prev" href="#carouselExampleControls"
-                role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a *ngIf="imageOthers.length > 0" class="carousel-control-next" href="#carouselExampleControls"
-                role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
+  </div>
+
+  <!-- Image Slider -->
+  <div class="carousel-wrapper mb-4">
+    <div id="carouselExampleControls" class="carousel slide carousel-fade" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img [src]="imageMain" class="d-block w-100 img-fluid img-cover" alt="{{title}}">
         </div>
-        <div class="container rooms" *ngIf="ifBuilding">
-            <div class="row mt-3">
-                <div class="col-md-9">
-                    <div class="row">
-                        <span class="col">
-                            <span *ngIf="bedrooms"><b>{{bedrooms}} Bedrooms</b></span>
-                            <span *ngIf="!bedrooms"><b>0 Bedrooms</b></span>
-                        </span>
-                        <span class="col">
-                            <span *ngIf="bathrooms"><b>{{bathrooms}} Bathrooms</b></span>
-                            <span *ngIf="!bathrooms"><b>0 Bathrooms</b></span>
-                        </span>
-                        <span class="col">
-                            <span *ngIf="garages"> <b>{{garages}} Garages</b></span>
-                            <span *ngIf="!garages"> <b>0 Garages </b></span>
-                        </span>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-star"></i> Save</button>
-                </div>
-            </div>
+        <div class="carousel-item" *ngFor="let image of imageOthers">
+          <img [src]="image" class="d-block w-100 img-fluid img-cover" alt="Property image">
         </div>
-    </div>  
+      </div>
+      <button *ngIf="imageOthers.length > 0" type="button" class="carousel-control-prev" data-target="#carouselExampleControls" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </button>
+      <button *ngIf="imageOthers.length > 0" type="button" class="carousel-control-next" data-target="#carouselExampleControls" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Info Bed/Bath/Garage Row -->
+  <div class="rooms-container p-3 mb-3" *ngIf="ifBuilding">
+    <div class="row text-center align-items-center">
+      <div class="col-4 room-spec">
+        <i class="fa fa-bed mr-2 text-primary"></i>
+        <span><strong>{{bedrooms || 0}}</strong> <small class="text-muted text-uppercase font-weight-bold d-none d-sm-inline">Beds</small></span>
+      </div>
+      <div class="col-4 room-spec">
+        <i class="fa fa-bath mr-2 text-primary"></i>
+        <span><strong>{{bathrooms || 0}}</strong> <small class="text-muted text-uppercase font-weight-bold d-none d-sm-inline">Baths</small></span>
+      </div>
+      <div class="col-4 room-spec">
+        <i class="fa fa-warehouse mr-2 text-primary"></i>
+        <span><strong>{{garages || 0}}</strong> <small class="text-muted text-uppercase font-weight-bold d-none d-sm-inline">Garages</small></span>
+      </div>
+    </div>
+  </div>
 </div>

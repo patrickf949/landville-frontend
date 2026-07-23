@@ -23,6 +23,7 @@ describe('ClientReviewService', () => {
   it('should call createClientReview with the correct URL', () => {
     service.createClientReview(10, { review: 'Feedback' }).subscribe();
     const req = httpTestingController.expectOne(`${environment.api_url}/auth/10/reviews/`);
+    expect(req.request.method).toBe('POST');
     req.flush({ message: 'success' });
   });
   it('should throw an unexpected error', () => {
@@ -31,6 +32,7 @@ describe('ClientReviewService', () => {
     const mockErrorResponse = { status: 400, statusText: 'Bad Request' };
     service.createClientReview(5000, { review: 'Feedback--' }).subscribe(res => response = res, err => errResponse = err);
     const req = httpTestingController.expectOne(`${environment.api_url}/auth/5000/reviews/`);
+    expect(req.request.method).toBe('POST');
     req.flush({message: 'success'}, mockErrorResponse);
   });
 });

@@ -73,9 +73,16 @@
         <a *ngIf="owner?.id" [routerLink]="['/user', owner.id]" class="d-block mb-3 owner-listings-link">
           <i class="fa fa-th-large mr-1"></i>View owner's other listings
         </a>
-        <button class="btn btn-primary btn-block" (click)="chatWithOwner()" [disabled]="startingChat">
+        <button class="btn btn-warning btn-block text-white" [routerLink]="['/checkout', slug]">
+          <i class="fa fa-shopping-cart mr-1"></i>Buy / Make Deposit
+        </button>
+        <button class="btn btn-primary btn-block" (click)="chatWithOwner()" [disabled]="startingChat" *ngIf="owner?.id !== myId">
           <i class="fa fa-comments mr-1"></i>
           {{ startingChat ? 'Opening chat…' : 'Chat with owner' }}
+        </button>
+        <button class="btn btn-secondary btn-block disabled" *ngIf="owner?.id === myId" disabled>
+          <i class="fa fa-home mr-1"></i>
+          This is your listing
         </button>
         <button class="btn btn-outline-primary btn-block" (click)="toggleSave()">
           <i class="fa mr-1" [class.fa-heart]="saved" [class.fa-heart-o]="!saved"
@@ -88,5 +95,5 @@
       </div>
     </div>
   </div>
-  <ngx-spinner></ngx-spinner>
+  <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 </div>

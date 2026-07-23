@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -57,7 +57,8 @@ export class PersonalInformationComponent implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private toasterService: ToastrService,
     private spinner: NgxSpinnerService,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) {
     this.profileForm = fb.group({
       firstName: this.firstName,
@@ -106,10 +107,12 @@ export class PersonalInformationComponent implements OnInit, OnDestroy {
             bio: profile.bio
           });
           this.spinner.hide();
+          this.cdr.detectChanges();
         },
         error => {
           this.spinner.hide();
-          this.toasterService.error(error.error.errors);
+          this.toasterService.error(error.error?.errors || error);
+          this.cdr.detectChanges();
         }
       )
     );

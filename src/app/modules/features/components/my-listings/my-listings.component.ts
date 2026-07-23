@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { PropertiesService } from 'src/app/services/properties/properties.service';
 import { ProfileService } from 'src/app/services/profile/profile.service';
@@ -17,7 +17,8 @@ export class MyListingsComponent implements OnInit {
   constructor(
     private propertiesService: PropertiesService,
     private profileService: ProfileService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -41,8 +42,12 @@ export class MyListingsComponent implements OnInit {
           ? results.filter((p: any) => p?.owner?.email === this.myEmail)
           : results;
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; }
+      error: () => {
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 

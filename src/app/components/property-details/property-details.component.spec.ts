@@ -14,7 +14,7 @@ import { of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 describe('Property detail', () => {
     let component: PropertyDetailsComponent;
     let fixture: ComponentFixture<PropertyDetailsComponent>;
@@ -93,7 +93,7 @@ describe('Property detail', () => {
                 NgxSpinnerModule
             ],
             providers: [
-
+                LocalStorageService,
                 {
                     provide: PropertyDetailService,
                     useValue: propertyDetailSpy

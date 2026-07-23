@@ -1,10 +1,12 @@
 import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ClientReviewsService } from 'src/app/services/client-reviews/client-reviews.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+
+import { extractErrorMessage } from 'src/app/helpers/error-handler';
 
 @Component({
   standalone: false,
@@ -28,7 +30,8 @@ export class ClientReviewsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastrService: ToastrService,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private cdr: ChangeDetectorRef
   ) {
     this.profileImage = 'assets/img/people.png';
   }
@@ -54,12 +57,13 @@ export class ClientReviewsComponent implements OnInit, OnDestroy {
           this.disabledPrev = false;
         }
         this.spinner.hide();
+        this.cdr.detectChanges();
       }, error => {
-        this.toastrService.error('No reviews yet');
+        const msg = extractErrorMessage(error);
+        this.toastrService.error(msg === 'An unexpected error occurred.' ? 'No reviews yet' : msg);
         this.spinner.hide();
-      }
-
-      )
+        this.cdr.detectChanges();
+      })
     );
   }
   fetchPrev() {

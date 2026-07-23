@@ -1,5 +1,6 @@
 import { RouterTestingModule } from '@angular/router/testing';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from 'src/app/components/home/home.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +31,8 @@ describe('HomeComponent', () => {
         FormsModule,
         SharedModule,
         RouterTestingModule,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        NoopAnimationsModule
       ],
       declarations: [HomeComponent],
       providers: [

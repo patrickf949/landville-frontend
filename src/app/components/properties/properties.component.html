@@ -81,6 +81,14 @@
         </div>
       </div>
 
+      <!-- Loading spinner -->
+      <div *ngIf="loading" class="text-center py-5 my-5">
+        <div class="spinner-border text-warning" role="status" style="width: 3.5rem; height: 3.5rem;">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <h5 class="mt-3 text-muted">Finding properties...</h5>
+      </div>
+
       <div *ngIf="!loading && !properties.length" class="empty-state text-center py-5">
         <i class="fa fa-search fa-3x mb-3"></i>
         <h5>No properties match your filters</h5>
@@ -89,7 +97,7 @@
       </div>
 
       <!-- Grid -->
-      <div *ngIf="view === 'grid'" class="row">
+      <div *ngIf="view === 'grid' && !loading" class="row">
         <div class="col-md-4 mb-3" *ngFor="let property of properties">
           <a [routerLink]="['/properties', property.slug]" class="custom-card" (click)="setDocTitle(property.title)">
             <app-card
@@ -104,7 +112,7 @@
       </div>
 
       <!-- List -->
-      <div *ngIf="view === 'list'">
+      <div *ngIf="view === 'list' && !loading">
         <div *ngFor="let property of properties">
           <a [routerLink]="['/properties', property.slug]" class="custom-card" (click)="setDocTitle(property.title)">
             <div class="card bg-light listview mb-2">
@@ -129,11 +137,11 @@
       </div>
 
       <!-- Map -->
-      <div *ngIf="view === 'map'" class="map-view">
+      <div *ngIf="view === 'map' && !loading" class="map-view">
         <app-map mode="results" [markers]="markers"></app-map>
       </div>
 
-      <div class="page-buttons mt-3" *ngIf="view !== 'map' && properties.length">
+      <div class="page-buttons mt-3" *ngIf="view !== 'map' && properties.length && !loading">
         <button class="btn prev" (click)="fetchPrevious()" [disabled]="disabledPrevious">
           <i class="fa fa-chevron-left mr-1"></i>Previous
         </button>
@@ -144,5 +152,5 @@
     </main>
   </div>
 
-  <ngx-spinner></ngx-spinner>
+  <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 </div>

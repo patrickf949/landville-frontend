@@ -61,7 +61,10 @@ export const resetPassordService = createSpyObj('EnterResetPasswordService', [
 ]);
  
 export const propertiesServiceSpy = createSpyObj('PropertiesService', [
-  'getProperties'
+  'getProperties',
+  'searchProperties',
+  'getAmenities',
+  'getNearbyFeatures'
 ]);
 
 export const propertyDetailSpy = jasmine.createSpyObj('PropertyDetailService', [

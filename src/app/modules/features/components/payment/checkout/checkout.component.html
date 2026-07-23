@@ -1,0 +1,236 @@
+<div class="container py-5 checkout-page">
+  <div class="row" *ngIf="property">
+    <!-- Left Column: Property Detail summary -->
+    <div class="col-lg-5 col-md-12 mb-4">
+      <div class="card shadow-sm border-0 premium-card">
+        <img [src]="property.image_main" alt="Property Image" class="card-img-top property-summary-img" />
+        <div class="card-body">
+          <h4 class="property-title mb-1">{{ property.title }}</h4>
+          <p class="text-muted mb-3"><i class="fa fa-map-marker-alt mr-2"></i>{{ property.address?.Street }}, {{ property.address?.City }}, {{ property.address?.State }}</p>
+          
+          <div class="d-flex justify-content-between align-items-center pricing-box p-3 rounded mb-4">
+            <span class="text-secondary font-weight-bold">Property Price</span>
+            <span class="price-val">₦{{ property.price | number:'1.2-2' }}</span>
+          </div>
+
+          <h5 class="section-subtitle">Payment Details</h5>
+          <p class="small text-muted mb-4">
+            You are placing a deposit/savings transaction towards acquiring this property. All payments on LandVille are secured using Flutterwave.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Checkout forms -->
+    <div class="col-lg-7 col-md-12">
+      <!-- Toggle for New Card / Saved Card -->
+      <div class="segmented-control mb-4 w-100" *ngIf="hasSavedCard">
+        <button type="button" class="btn-choice text-center" [class.active]="useSavedCard" (click)="useSavedCard = true">
+          <i class="fa fa-credit-card mr-2"></i>Saved Card
+        </button>
+        <button type="button" class="btn-choice text-center" [class.active]="!useSavedCard" (click)="useSavedCard = false">
+          <i class="fa fa-plus-circle mr-2"></i>New Card
+        </button>
+      </div>
+
+      <!-- Saved Card Payment Form -->
+      <div class="card shadow-sm border-0 p-4 premium-card" *ngIf="hasSavedCard && useSavedCard">
+        <h4 class="mb-4">Pay with Saved Card</h4>
+        
+        <div class="saved-card-badge p-4 rounded mb-4 border d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1 text-uppercase font-weight-bold">{{ savedCardInfo?.card_brand }}</h6>
+            <p class="mb-0 text-muted">{{ savedCardInfo?.card_number }}</p>
+          </div>
+          <span class="badge badge-success px-3 py-2">Saved Card Active</span>
+        </div>
+
+        <form [formGroup]="savedCardForm" (ngSubmit)="processPayment()">
+          <div class="form-group mb-4">
+            <label class="d-block">PAYMENT TYPE</label>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="savedFullPayment" name="savedPaymentType" class="custom-control-input" value="full" (change)="setPaymentType('full')" [checked]="paymentType === 'full'">
+              <label class="custom-control-label" for="savedFullPayment">Full Payment</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="savedInstallment" name="savedPaymentType" class="custom-control-input" value="installment" (change)="setPaymentType('installment')" [checked]="paymentType === 'installment'">
+              <label class="custom-control-label" for="savedInstallment">Instalment</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="savedAmount">AMOUNT TO DEPOSIT (₦)</label>
+            <input type="number" id="savedAmount" class="form-control premium-input" formControlName="amount" placeholder="e.g. 100000"
+                   [class.is-invalid]="isSubmitted && savedCardForm.get('amount')?.invalid" />
+            <div class="invalid-feedback">Please enter a valid amount (minimum ₦1).</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block py-3 mt-4 text-uppercase font-weight-bold">
+            Confirm Payment
+          </button>
+        </form>
+      </div>
+
+      <!-- New Card Payment Form -->
+      <div class="card shadow-sm border-0 p-4 premium-card" *ngIf="!hasSavedCard || !useSavedCard">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4 class="mb-0">Card Details</h4>
+          <!-- Card Type Toggle -->
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="intlCardSwitch" [checked]="isInternational" (change)="toggleCardType($any($event.target).checked)">
+            <label class="custom-control-label text-muted small" for="intlCardSwitch">International Card</label>
+          </div>
+        </div>
+
+        <form [formGroup]="paymentForm" (ngSubmit)="processPayment()">
+          <!-- Card Number -->
+          <div class="form-group">
+            <label for="cardno">CARD NUMBER</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-transparent border-right-0"><i class="fa fa-credit-card"></i></span>
+              </div>
+              <input type="text" id="cardno" class="form-control premium-input border-left-0" formControlName="cardno" placeholder="1234567890123456"
+                     [class.is-invalid]="isSubmitted && paymentForm.get('cardno')?.invalid" />
+              <div class="invalid-feedback">Please enter a valid card number (16-19 digits).</div>
+            </div>
+          </div>
+
+          <!-- Expiry & CVV -->
+          <div class="row">
+            <div class="col-md-4 col-sm-6">
+              <div class="form-group">
+                <label for="expmonth">EXPIRY MONTH</label>
+                <input type="text" id="expmonth" class="form-control premium-input" formControlName="expirymonth" placeholder="MM" maxlength="2"
+                       [class.is-invalid]="isSubmitted && paymentForm.get('expirymonth')?.invalid" />
+                <div class="invalid-feedback">Invalid month (01-12).</div>
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <div class="form-group">
+                <label for="expyear">EXPIRY YEAR</label>
+                <input type="text" id="expyear" class="form-control premium-input" formControlName="expiryyear" placeholder="YY" maxlength="2"
+                       [class.is-invalid]="isSubmitted && paymentForm.get('expiryyear')?.invalid" />
+                <div class="invalid-feedback">Invalid year (YY).</div>
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="password" id="cvv" class="form-control premium-input" formControlName="cvv" placeholder="123" maxlength="4"
+                       [class.is-invalid]="isSubmitted && paymentForm.get('cvv')?.invalid" />
+                <div class="invalid-feedback">CVV must be 3-4 digits.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pin (Nigerian Local Card Only) -->
+          <div class="form-group" *ngIf="!isInternational">
+            <label for="pin">CARD PIN</label>
+            <input type="password" id="pin" class="form-control premium-input" formControlName="pin" placeholder="****" maxlength="4"
+                   [class.is-invalid]="isSubmitted && paymentForm.get('pin')?.invalid" />
+            <div class="invalid-feedback">Pin must be 4 digits.</div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="d-block">PAYMENT TYPE</label>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="newFullPayment" name="newPaymentType" class="custom-control-input" value="full" (change)="setPaymentType('full')" [checked]="paymentType === 'full'">
+              <label class="custom-control-label" for="newFullPayment">Full Payment</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="newInstallment" name="newPaymentType" class="custom-control-input" value="installment" (change)="setPaymentType('installment')" [checked]="paymentType === 'installment'">
+              <label class="custom-control-label" for="newInstallment">Instalment</label>
+            </div>
+          </div>
+
+          <!-- Amount -->
+          <div class="form-group">
+            <label for="amount">AMOUNT TO DEPOSIT (₦)</label>
+            <input type="number" id="amount" class="form-control premium-input" formControlName="amount" placeholder="e.g. 100000"
+                   [class.is-invalid]="isSubmitted && paymentForm.get('amount')?.invalid" />
+            <div class="invalid-feedback">Please enter a valid amount (minimum ₦1).</div>
+          </div>
+
+          <!-- International billing fields -->
+          <div *ngIf="isInternational" class="intl-fields border-top pt-3 mt-3">
+            <h6 class="mb-3 font-weight-bold">Billing Details (International Card)</h6>
+            <div class="form-group">
+              <label for="billingaddress">STREET ADDRESS</label>
+              <input type="text" id="billingaddress" class="form-control premium-input" formControlName="billingaddress" placeholder="123 Main St"
+                     [class.is-invalid]="isSubmitted && paymentForm.get('billingaddress')?.invalid" />
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="billingcity">CITY</label>
+                  <input type="text" id="billingcity" class="form-control premium-input" formControlName="billingcity" placeholder="Lagos"
+                         [class.is-invalid]="isSubmitted && paymentForm.get('billingcity')?.invalid" />
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="billingstate">STATE</label>
+                  <input type="text" id="billingstate" class="form-control premium-input" formControlName="billingstate" placeholder="Lagos"
+                         [class.is-invalid]="isSubmitted && paymentForm.get('billingstate')?.invalid" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="billingzip">ZIP / POSTAL CODE</label>
+                  <input type="text" id="billingzip" class="form-control premium-input" formControlName="billingzip" placeholder="100001"
+                         [class.is-invalid]="isSubmitted && paymentForm.get('billingzip')?.invalid" />
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="billingcountry">COUNTRY</label>
+                  <input type="text" id="billingcountry" class="form-control premium-input" formControlName="billingcountry" placeholder="NG"
+                         [class.is-invalid]="isSubmitted && paymentForm.get('billingcountry')?.invalid" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Save card for future payments checkbox -->
+          <div class="custom-control custom-checkbox my-3">
+            <input type="checkbox" class="custom-control-input" id="saveCardCheck" formControlName="save_card">
+            <label class="custom-control-label text-muted small" for="saveCardCheck">Save card details for future payments on LandVille</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block py-3 text-uppercase font-weight-bold">
+            Pay Now
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OTP Modal -->
+<div class="custom-modal-backdrop" *ngIf="showOtpModal">
+  <div class="custom-modal-dialog">
+    <div class="card border-0 shadow p-4 text-center">
+      <div class="mb-3">
+        <i class="fa fa-shield-alt fa-3x text-primary"></i>
+      </div>
+      <h4>Card Authentication</h4>
+      <p class="text-muted small">Please input the One-Time Password (OTP) sent to your mobile phone or email to complete this payment.</p>
+      
+      <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
+        <div class="form-group mt-3">
+          <input type="text" class="form-control text-center font-weight-bold otp-input" formControlName="otp" placeholder="Enter OTP" maxlength="8"
+                 [class.is-invalid]="otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched" />
+          <div class="invalid-feedback">Please enter a valid OTP numeric code.</div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+          <button type="button" class="btn btn-link text-muted" (click)="showOtpModal = false">Cancel</button>
+          <button type="submit" class="btn btn-primary px-4">Verify OTP</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

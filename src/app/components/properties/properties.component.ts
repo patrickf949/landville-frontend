@@ -3,7 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import {
   PropertiesService, PropertyFilters
 } from 'src/app/services/properties/properties.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Property } from 'src/app/models/Property';
 import { ActivatedRoute } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
@@ -77,7 +77,8 @@ export class PropertiesComponent implements OnInit {
     private toastrService: ToastrService,
     private titleService: Title,
     private metaService: Meta,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -113,8 +114,11 @@ export class PropertiesComponent implements OnInit {
     this.spinner.show();
     this.propertiesServices.searchProperties(query).pipe(
       catchError(() => of(null)),
-      finalize(() => { this.spinner.hide(); this.loading = false; })
-    ).subscribe(response => this.consume(response));
+      finalize(() => { this.spinner.hide(); this.loading = false; this.cdr.detectChanges(); })
+    ).subscribe(response => {
+      this.consume(response);
+      this.cdr.detectChanges();
+    });
   }
 
   clearFilters(): void {
@@ -129,8 +133,11 @@ export class PropertiesComponent implements OnInit {
     this.spinner.show();
     this.propertiesServices.getProperties(url).pipe(
       catchError(() => of(null)),
-      finalize(() => { this.spinner.hide(); this.loading = false; })
-    ).subscribe(response => this.consume(response));
+      finalize(() => { this.spinner.hide(); this.loading = false; this.cdr.detectChanges(); })
+    ).subscribe(response => {
+      this.consume(response);
+      this.cdr.detectChanges();
+    });
   }
 
   private consume(response: any): void {
@@ -143,9 +150,9 @@ export class PropertiesComponent implements OnInit {
       this.disabledPrevious = true;
       return;
     }
-    const payload = response.data.properties;
-    this.properties = payload.results;
-    this.count = payload.count;
+    const payload = response.data ? (response.data.properties || response.data.property || response) : response;
+    this.properties = payload.results || [];
+    this.count = payload.count || 0;
     if (payload.next) { this.next = payload.next; } else { this.disabledNext = true; }
     if (payload.previous) { this.previous = payload.previous; } else { this.disabledPrevious = true; }
   }

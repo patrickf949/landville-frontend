@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, ReplaySubject } from 'rxjs';
 import {
   UserProfileResponse,
   UserProfileUpdatedResponse
@@ -14,21 +14,26 @@ import { APPCONFIG } from 'src/app/config';
 export class ProfileService {
   profileUrl = '/auth/profile/';
   depositeUrl = '/transactions/';
-  userProfile$: Subject<any> = new Subject<any>();
+  userProfile$: ReplaySubject<any> = new ReplaySubject<any>(1);
   getDep$: Subject<any> = new Subject<any>();
-  userToken = this.localStorageService.get('token', '');
+  get httpOptions() {
+    const token = this.localStorageService.get('token', '');
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      })
+    };
+  }
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      Authorization: `Bearer ${this.userToken}`
-    })
-  };
-  httpFormHeaders = {
-    headers: new HttpHeaders({
-      Authorization: `Bearer ${this.userToken}`,
-      'Content-Type': 'multipart/form-data'
-    })
-  };
+  get httpFormHeaders() {
+    const token = this.localStorageService.get('token', '');
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      })
+    };
+  }
 
   constructor(
     private http: HttpClient,

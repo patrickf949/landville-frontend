@@ -6,6 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { noWhitespaceValidator } from 'src/app/helpers/validators/no-whitespace-validator'
 
+import { extractErrorMessage } from 'src/app/helpers/error-handler';
+
 @Component({
   standalone: false,
   selector: 'app-review',
@@ -47,13 +49,7 @@ export class ReviewComponent implements OnInit {
       },
       error => {
         this.spinner.hide();
-        let toastMessage = '';
-        if (!error.errors) {
-          toastMessage = 'Server or network error happened!';
-        } else {
-          toastMessage = error.errors.detail ? error.errors : error.errors.detail;
-        }
-        this.toastrService.error(toastMessage);
+        this.toastrService.error(extractErrorMessage(error));
       }
     );
   }

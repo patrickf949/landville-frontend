@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild
+  AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -29,7 +29,8 @@ export class ThreadComponent implements OnInit, OnDestroy, AfterViewChecked {
     private route: ActivatedRoute,
     private chatService: ChatService,
     private profileService: ProfileService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +39,7 @@ export class ThreadComponent implements OnInit, OnDestroy, AfterViewChecked {
       next: (profile: any) => {
         this.myId = profile?.data?.profile?.user?.id
           || profile?.data?.user?.id || null;
+        this.cdr.detectChanges();
       },
       error: () => undefined
     });
@@ -46,8 +48,12 @@ export class ThreadComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.messages = response?.results || response || [];
         this.loading = false;
         this.shouldScroll = true;
+        this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; }
+      error: () => {
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
     });
     this.sub = this.chatService.connect(this.conversationId)
       .subscribe((event: ChatEvent) => this.onEvent(event));
@@ -83,6 +89,7 @@ export class ThreadComponent implements OnInit, OnDestroy, AfterViewChecked {
     } else if (event.type === 'error') {
       this.toastr.error(event.detail || 'Message could not be sent');
     }
+    this.cdr.detectChanges();
   }
 
   send(): void {
@@ -97,11 +104,13 @@ export class ThreadComponent implements OnInit, OnDestroy, AfterViewChecked {
           const message = response?.data?.message;
           if (message) { this.messages.push(message); }
           this.shouldScroll = true;
+          this.cdr.detectChanges();
         },
         error: () => this.toastr.error('Message could not be sent')
       });
     }
     this.draft = '';
+    this.cdr.detectChanges();
   }
 
   isMine(message: any): boolean {

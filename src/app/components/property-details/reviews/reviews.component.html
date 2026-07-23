@@ -20,9 +20,8 @@
                 <p class="card-text">{{oneReview.review }}</p>
             </div>
             <hr>
-            <a routerLinkActive="active" [routerLink]="['/auth', oneReview.client, 'reviews']"><button
-                    class="btn btn-primary" id="review-btn" *ngIf="count>1">More Reviews</button></a>
-            <ngx-spinner></ngx-spinner>
+            <button class="btn btn-primary" id="review-btn" *ngIf="count>1" (click)="getMoreReviews(oneReview.client)">More Reviews</button>
+            <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
         </div>
     </div>
 </div>

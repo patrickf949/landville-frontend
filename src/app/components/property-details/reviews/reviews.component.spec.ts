@@ -44,11 +44,11 @@ describe('ReviewsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should go to next page on button click', () => {
+  it('should go to next page on button click', async () => {
+    spyOn(component, 'getMoreReviews');
     const debugElement = fixture.nativeElement.querySelector('#review-btn');
     debugElement.dispatchEvent(new Event('click'));
-    fixture.whenStable().then(() => {
+    await fixture.whenStable();
     expect(component.getMoreReviews).toHaveBeenCalled();
-  });
   });
 });

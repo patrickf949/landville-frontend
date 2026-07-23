@@ -64,15 +64,22 @@ export class ChatService {
     if (!this.isBrowser) { return this.events$.asObservable(); }
     this.disconnect();
     const token = this.localStorage.get('token', '');
-    const wsBase = APPCONFIG.base_url
+    let wsBase = APPCONFIG.base_url
       .replace(/^https/, 'wss')
       .replace(/^http/, 'ws')
       .replace(/\/api\/v1\/?$/, '');
+
+    if (!wsBase) {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      wsBase = `${protocol}//${window.location.host}`;
+    }
+
     this.socket = webSocket<ChatEvent>(
       `${wsBase}/ws/chat/${conversationId}/?token=${token}`);
     this.socket.subscribe({
       next: event => this.events$.next(event),
       error: () => this.events$.next({ type: 'connection.lost' }),
+      complete: () => this.events$.next({ type: 'connection.lost' })
     });
     return this.events$.asObservable();
   }

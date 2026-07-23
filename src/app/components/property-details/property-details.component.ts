@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { PropertyDetailService } from 'src/app/services/property-detail/property-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -8,6 +8,8 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatService } from 'src/app/services/chat/chat.service';
 import { PropertiesService } from 'src/app/services/properties/properties.service';
+import { extractErrorMessage } from 'src/app/helpers/error-handler';
+import { ProfileService } from 'src/app/services/profile/profile.service';
 
 @Component({
   standalone: false,
@@ -26,7 +28,7 @@ export class PropertyDetailsComponent implements OnInit, OnDestroy {
   state: string;
   street: string;
   title: string;
-  price: string;
+  price: number;
   description: string;
   imageMain: string;
   imageOthers: Array<any> = [];
@@ -49,6 +51,7 @@ export class PropertyDetailsComponent implements OnInit, OnDestroy {
   lon: number | null = null;
   saved = false;
   startingChat = false;
+  myId: number | null = null;
   subscribe: Subscription[] = [];
 
   constructor(
@@ -59,14 +62,43 @@ export class PropertyDetailsComponent implements OnInit, OnDestroy {
     private chatService: ChatService,
     private authService: AuthService,
     private spinner: NgxSpinnerService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private profileService: ProfileService,
+    private cdr: ChangeDetectorRef
   ) { }
 
+  savedPropertiesList: any[] = [];
+
   ngOnInit(): void {
+    if (this.isLoggedIn) {
+      this.subscribe.push(
+        this.profileService.getProfile().subscribe((profile: any) => {
+          const profileData: any = profile;
+          this.myId = profileData?.data?.profile?.user?.id || profileData?.data?.user?.id || profileData?.profile?.user?.id || null;
+          this.cdr.detectChanges();
+        })
+      );
+      this.subscribe.push(
+        this.propertiesService.getSavedProperties().subscribe((savedProps: any) => {
+          this.savedPropertiesList = savedProps?.data?.property || savedProps?.results || (Array.isArray(savedProps) ? savedProps : []);
+          this.checkIfSaved();
+        })
+      );
+    }
     this.route.paramMap.subscribe(result => {
       this.slug = result.get('slug');
       this.viewProperty(this.slug);
+      this.checkIfSaved();
     });
+  }
+
+  checkIfSaved(): void {
+    if (this.slug && this.savedPropertiesList.length > 0) {
+      if (this.savedPropertiesList.some((p: any) => p.slug === this.slug)) {
+        this.saved = true;
+        this.cdr.detectChanges();
+      }
+    }
   }
 
   get isLoggedIn(): boolean {
@@ -88,16 +120,15 @@ export class PropertyDetailsComponent implements OnInit, OnDestroy {
     this.subscribe.push(
       this.propertyservice.getProperty(slug).subscribe(
         response => {
-          const data = response.data.property;
-          const priceHolder = data.price;
+          const data = response.data ? (response.data.property || response) : response;
           this.description = data.description;
           this.title = data.title;
-          this.city = data.address.City;
-          this.state = data.address.State;
-          this.street = data.address.Street;
-          this.price = priceHolder.toString();
+          this.city = data.address?.City || '';
+          this.state = data.address?.State || '';
+          this.street = data.address?.Street || '';
+          this.price = data.price;
           this.imageMain = data.image_main;
-          this.imageOthers = data.image_others;
+          this.imageOthers = data.image_others || [];
           this.lotSize = data.lot_size;
           this.video = data.video;
           this.property = data;
@@ -119,10 +150,12 @@ export class PropertyDetailsComponent implements OnInit, OnDestroy {
           this.checkIfVideo(this.video);
           this.createdAt = data.created_at;
           this.spinner.hide();
+          this.cdr.detectChanges();
         }, error => {
-          this.toastrService.error(JSON.stringify(error.errors));
+          this.toastrService.error(extractErrorMessage(error));
           this.router.navigate(['/properties']);
           this.spinner.hide();
+          this.cdr.detectChanges();
         }
       )
     );
@@ -159,8 +192,7 @@ export class PropertyDetailsComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.startingChat = false;
-        this.toastrService.error(
-          err?.error?.errors || 'Could not start the conversation');
+        this.toastrService.error(extractErrorMessage(err) || 'Could not start the conversation');
       }
     });
   }
@@ -178,8 +210,7 @@ export class PropertyDetailsComponent implements OnInit, OnDestroy {
           response?.data || 'Saved list updated'),
         error: (err) => {
           this.saved = !this.saved;
-          this.toastrService.error(
-            err?.error?.errors || 'Could not update your saved list');
+          this.toastrService.error(extractErrorMessage(err) || 'Could not update your saved list');
         }
       });
   }
