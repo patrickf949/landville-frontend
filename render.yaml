@@ -18,6 +18,8 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "24"
+      - key: API_URL
+        sync: false
     routes:
       # SPA fallback: every path serves index.html so client-side routing works.
       - type: rewrite

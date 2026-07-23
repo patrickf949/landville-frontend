@@ -36,7 +36,12 @@
                 "output": "."
               }
             ],
-            "styles": [],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "src/styles.scss",
+              "src/assets/scss/main.scss"
+            ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "."
@@ -51,7 +56,12 @@
             },
             "externalDependencies": [
               "domino"
-            ]
+            ],
+            "optimization": {
+              "fonts": {
+                "inline": false
+              }
+            }
           },
           "configurations": {
             "production": {
@@ -94,7 +104,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "buildTarget": "landville-frontend:build:development",
-            "runner": "vitest",
+            "runner": "karma",
             "runnerConfig": false,
             "tsConfig": "tsconfig.spec.json",
             "include": [
