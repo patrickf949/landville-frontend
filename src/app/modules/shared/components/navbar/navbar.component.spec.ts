@@ -35,6 +35,7 @@ describe('NavbarComponent', () => {
     component = fixture.componentInstance;
     localStorageSpy.get.and.returnValue('token');
     profileServiceSpy.getProfile.and.returnValue(of(mockProfileResponse));
+    profileServiceSpy.userProfile$ = of(mockProfileResponse);
     fixture.detectChanges();
 
   });
@@ -43,11 +44,11 @@ describe('NavbarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call logout', () => {
+  it('should call logout', async () => {
+    spyOn(component, 'handleLogout');
     const el = fixture.nativeElement.querySelector('#logoutBtn');
     el.dispatchEvent(new Event('click'));
-    fixture.whenStable().then(() => {
-      expect(component.handleLogout).toHaveBeenCalled();
-    });
+    await fixture.whenStable();
+    expect(component.handleLogout).toHaveBeenCalled();
   });
 });

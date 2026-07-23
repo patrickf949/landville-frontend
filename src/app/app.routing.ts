@@ -29,8 +29,7 @@ const routes: Routes = [
         path: '',
         loadChildren: () => import('./modules/authentication/authentication.module').then(m => m.AuthenticationModule)
       }
-    ],
-    canActivate: [NoAuthGuard]
+    ]
   },
   {
     path: 'terms-and-conditions',
@@ -76,7 +75,7 @@ const routes: Routes = [
         },
         {
           name: 'og:image',
-          content: 'assets/img/ICON/Logo.png'
+          content: 'assets/img/ICON/Logo Icon.png'
         },
         // Twitter
         {
@@ -85,7 +84,7 @@ const routes: Routes = [
         },
         {
           name: 'twitter:image',
-          content: 'assets/img/ICON/Logo.png',
+          content: 'assets/img/ICON/Logo Icon.png',
         },
         {
           name: 'twitter:title',
@@ -109,10 +108,10 @@ const routes: Routes = [
         },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'LandVille' },
-        { name: 'og:image', content: 'assets/img/ICON/Logo.png' },
+        { name: 'og:image', content: 'assets/img/ICON/Logo Icon.png' },
         // Twitter
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:image', content: 'assets/img/ICON/Logo.png' },
+        { name: 'twitter:image', content: 'assets/img/ICON/Logo Icon.png' },
         { name: 'twitter:title', content: 'All Properties | Acquire your dream property with ease today' },
         { name: 'twitter:description', content: 'Browse a wide range of the best property across Nigeria' },
       ]
@@ -132,7 +131,7 @@ const routes: Routes = [
         { property: 'og:site_name', content: 'LandVille' },
         // Twitter
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:image', content: 'assets/img/ICON/Logo.png' },
+        { name: 'twitter:image', content: 'assets/img/ICON/Logo Icon.png' },
         { name: 'twitter:title', content: 'All Properties | Acquire your dream property with ease today' },
         { name: 'twitter:description', content: 'Browse a wide range of the best property across Nigeria' },
       ]

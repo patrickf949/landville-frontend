@@ -1,6 +1,13 @@
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins';
+// Bootstrap CSS is loaded via angular.json (bootstrap.min.css)
+// No SCSS-level imports needed.
+
+@import 'node_modules/ngx-spinner/animations/ball-scale-multiple.css';
+@import 'node_modules/ngx-toastr/toastr.css';
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
 
 @font-face {
   font-family: 'Airbnb Cereal App Light';

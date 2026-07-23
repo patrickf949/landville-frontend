@@ -1,9 +1,8 @@
 // BASE
-@import "base/base";
+@use "base/base" as *;
 // ABSTRACTS
-@import "abstract/variables";
+@use "abstract/variables" as *;
 // COMPONENTS
-@import "components/button";
-@import "components/input";
+@use "components/button" as *;
+@use "components/input" as *;
 // PAGES
-

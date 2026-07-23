@@ -103,6 +103,9 @@ ul.top-menu > li > a:hover .caret {
   -webkit-border-radius: 50%;
   border: .2rem solid var(--color-primary-dark);
   display: inline-block;
+  object-fit: cover;
+  width: 35px;
+  height: 35px;
 }
 
 .profile-ava img.simple {
