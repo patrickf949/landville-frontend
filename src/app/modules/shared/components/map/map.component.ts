@@ -23,9 +23,9 @@ const DEFAULT_CENTER: [number, number] = [9.0765, 7.4712]; // Abuja
 let leafletLoader: Promise<void> | null = null;
 
 function loadLeaflet(): Promise<void> {
+  if (typeof (window as any).L !== 'undefined') { return Promise.resolve(); }
   if (leafletLoader) { return leafletLoader; }
   leafletLoader = new Promise<void>((resolve, reject) => {
-    if (typeof (window as any).L !== 'undefined') { resolve(); return; }
     const css = document.createElement('link');
     css.rel = 'stylesheet';
     css.href = LEAFLET_CSS;
