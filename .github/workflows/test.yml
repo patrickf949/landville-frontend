@@ -39,8 +39,8 @@ jobs:
       build_id: ${{ inputs.build_id }}
       result: ${{ steps.coveralls.outputs.coveralls-api-result}}
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: lts/*
         cache: npm
@@ -55,7 +55,7 @@ jobs:
         parallel: true
         flag-name: ${{ inputs.os }}
         debug: true
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: ${{ inputs.store_coverage }}
       with:
         name: coverage-data-${{ inputs.os }}
