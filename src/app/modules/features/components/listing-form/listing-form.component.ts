@@ -57,6 +57,10 @@ export class ListingFormComponent implements OnInit {
     { value: 'B', label: 'Busy' },
   ];
 
+  editSlug: string | null = null;
+  existingMainPhoto: string | null = null;
+  existingOtherPhotos: string[] = [];
+
   constructor(
     private fb: FormBuilder,
     private propertiesService: PropertiesService,
@@ -109,6 +113,54 @@ export class ListingFormComponent implements OnInit {
       rentPeriod.updateValueAndValidity();
       this.cdr.detectChanges();
     });
+
+    this.editSlug = this.route.snapshot.params['slug'];
+    if (this.editSlug) {
+      this.loadPropertyData();
+    }
+  }
+
+  loadPropertyData(): void {
+    this.propertiesService.getProperty(this.editSlug).subscribe({
+      next: (res) => {
+        const prop = res.data?.property || res;
+        this.form.patchValue({
+          title: prop.title,
+          listing_type: prop.listing_type,
+          property_type: prop.property_type,
+          rent_period: prop.rent_period,
+          price: prop.price,
+          description: prop.description,
+          city: prop.address?.City || '',
+          state: prop.address?.State || '',
+          street: prop.address?.Street || '',
+          lat: prop.coordinates?.lat,
+          lon: prop.coordinates?.lon,
+          bedrooms: prop.bedrooms,
+          bathrooms: prop.bathrooms,
+          garages: prop.garages,
+          lot_size: prop.lot_size,
+          distance_to_main_road: prop.distance_to_main_road,
+          distance_to_city: prop.distance_to_city,
+          noise_level: prop.noise_level,
+        });
+
+        if (prop.amenities) {
+          prop.amenities.forEach((a: any) => this.selectedAmenities.add(a.id));
+        }
+        if (prop.nearby) {
+          prop.nearby.forEach((n: any) => this.selectedNearby.add(n.id));
+        }
+
+        this.existingMainPhoto = prop.image_main;
+        this.existingOtherPhotos = prop.image_others || [];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.toastr.error('Failed to load property data.');
+        this.router.navigate(['/my-listings']);
+      }
+    });
   }
 
   get isLand(): boolean {
@@ -124,6 +176,13 @@ export class ListingFormComponent implements OnInit {
       return this.amenities.filter(a => ['L', 'U', 'S'].includes(a.group));
     }
     return this.amenities.filter(a => a.group !== 'L');
+  }
+
+  get totalPhotosCount(): number {
+    let count = this.photos.length;
+    if (this.existingMainPhoto) count++;
+    count += this.existingOtherPhotos.length;
+    return count;
   }
 
   toggle(set: Set<number>, id: number): void {
@@ -144,7 +203,7 @@ export class ListingFormComponent implements OnInit {
         this.toastr.error(`The photo "${file.name}" exceeds the 500KB limit.`);
         continue;
       }
-      if (this.photos.length >= this.maxPhotos) {
+      if (this.totalPhotosCount >= this.maxPhotos) {
         this.toastr.warning(
           `You can upload a maximum of ${this.maxPhotos} photos.`);
         break;
@@ -170,24 +229,36 @@ export class ListingFormComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  submit(): void {
+  removeExistingOtherPhoto(index: number): void {
+    if (!this.editSlug) return;
+    const photoUrl = this.existingOtherPhotos[index];
+    this.propertiesService.deletePropertyResource(this.editSlug, { image_others: [photoUrl] })
+      .subscribe({
+        next: () => {
+          this.existingOtherPhotos.splice(index, 1);
+          this.toastr.success('Photo removed successfully.');
+          this.cdr.detectChanges();
+        },
+        error: () => this.toastr.error('Failed to remove photo.')
+      });
+  }
+
+  submit(action: 'draft' | 'publish'): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.toastr.error('Please complete all the required fields.');
       this.cdr.detectChanges();
       
-      // Auto-scroll to the first invalid control
       const firstInvalidControl: HTMLElement = document.querySelector('form .ng-invalid');
       if (firstInvalidControl) {
         firstInvalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       return;
     }
-    if (!this.photos.length) {
+    if (this.totalPhotosCount === 0) {
       this.toastr.error('Please add at least one photo of the property.');
       this.cdr.detectChanges();
       
-      // Auto-scroll to the photo upload area
       const photoUploadArea: HTMLElement = document.querySelector('.photo-upload-area');
       if (photoUploadArea) {
         photoUploadArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -222,18 +293,31 @@ export class ListingFormComponent implements OnInit {
       id => payload.append('amenities', String(id)));
     this.selectedNearby.forEach(id => payload.append('nearby', String(id)));
 
-    const main = this.photos[this.mainPhotoIndex];
-    payload.append('image_main', main, main.name);
-    this.photos.forEach((photo, i) => {
-      if (i !== this.mainPhotoIndex) {
-        payload.append('image_others', photo, photo.name);
-      }
-    });
+    payload.append('is_published', action === 'publish' ? 'true' : 'false');
+
+    // Only append new photos
+    if (this.photos.length > 0) {
+      // If we don't have an existing main photo, make the first new photo the main photo
+      const newMainIndex = this.existingMainPhoto ? -1 : this.mainPhotoIndex;
+      
+      this.photos.forEach((photo, i) => {
+        if (i === newMainIndex) {
+          payload.append('image_main', photo, photo.name);
+        } else {
+          payload.append('image_others', photo, photo.name);
+        }
+      });
+    }
 
     this.submitting = true;
-    this.propertiesService.createProperty(payload).subscribe({
+    
+    const requestObservable = this.editSlug 
+      ? this.propertiesService.updateProperty(this.editSlug, payload)
+      : this.propertiesService.createProperty(payload);
+
+    requestObservable.subscribe({
       next: () => {
-        this.toastr.success('Your listing has been created!');
+        this.toastr.success(this.editSlug ? 'Listing updated successfully!' : 'Your listing has been created!');
         this.router.navigate(['/my-listings']);
         this.cdr.detectChanges();
       },

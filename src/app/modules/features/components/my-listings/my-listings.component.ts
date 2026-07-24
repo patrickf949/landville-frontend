@@ -62,6 +62,18 @@ export class MyListingsComponent implements OnInit {
     });
   }
 
+  publish(listing: any): void {
+    const payload = new FormData();
+    payload.append('is_published', 'true');
+    this.propertiesService.updateProperty(listing.slug, payload).subscribe({
+      next: () => {
+        this.toastr.success('Listing published successfully!');
+        this.fetch();
+      },
+      error: () => this.toastr.error('Could not publish the listing')
+    });
+  }
+
   remove(listing: any): void {
     if (!confirm(`Delete "${listing.title}"? This cannot be undone.`)) {
       return;

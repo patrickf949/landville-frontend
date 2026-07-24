@@ -18,6 +18,12 @@ export const CommonLayoutRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'edit-listing/:slug',
+    component: ListingFormComponent,
+    data: { title: 'Edit a listing' },
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'my-listings',
     component: MyListingsComponent,
     data: { title: 'My listings' },

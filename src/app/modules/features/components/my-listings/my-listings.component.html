@@ -25,9 +25,14 @@
       <div class="listing-card">
         <div class="thumb">
           <img [src]="listing.image_main" [alt]="listing.title" />
-          <span class="badge-status" [class.closed]="listing.status !== 'Available'">
-            {{ listing.status }}
-          </span>
+          <div class="badge-container">
+            <span class="badge-status" [class.closed]="listing.status !== 'Available'" *ngIf="listing.is_published">
+              {{ listing.status }}
+            </span>
+            <span class="badge-status bg-secondary ml-1" *ngIf="!listing.is_published">
+              Draft
+            </span>
+          </div>
         </div>
         <div class="body">
           <h6 class="title">{{ listing.title }}</h6>
@@ -38,15 +43,21 @@
           <div class="actions">
             <a [routerLink]="['/properties', listing.slug]"
                class="btn btn-sm btn-outline-secondary">View</a>
-            <button *ngIf="listing.status === 'Available' && listing.listing_type === 'Rent'"
+            <a [routerLink]="['/edit-listing', listing.slug]"
+               class="btn btn-sm btn-outline-info">Edit</a>
+            <button *ngIf="!listing.is_published"
+                    class="btn btn-sm btn-outline-success" (click)="publish(listing)">
+              Publish
+            </button>
+            <button *ngIf="listing.is_published && listing.status === 'Available' && listing.listing_type === 'Rent'"
                     class="btn btn-sm btn-outline-primary" (click)="markAs(listing, 'RE')">
               Mark rented
             </button>
-            <button *ngIf="listing.status === 'Available' && listing.listing_type === 'Sale'"
+            <button *ngIf="listing.is_published && listing.status === 'Available' && listing.listing_type === 'Sale'"
                     class="btn btn-sm btn-outline-primary" (click)="markAs(listing, 'SO')">
               Mark sold
             </button>
-            <button *ngIf="listing.status !== 'Available'"
+            <button *ngIf="listing.is_published && listing.status !== 'Available'"
                     class="btn btn-sm btn-outline-success" (click)="markAs(listing, 'AV')">
               Relist
             </button>

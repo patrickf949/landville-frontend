@@ -57,12 +57,20 @@ export class PropertiesService {
     return this.http.post(this.base, payload);
   }
 
+  getProperty(slug: string): Observable<any> {
+    return this.http.get(`${this.base}${slug}/`);
+  }
+
   updateProperty(slug: string, payload: FormData): Observable<any> {
     return this.http.patch(`${this.base}${slug}/`, payload);
   }
 
   deleteProperty(slug: string): Observable<any> {
     return this.http.delete(`${this.base}${slug}/`);
+  }
+
+  deletePropertyResource(slug: string, payload: any): Observable<any> {
+    return this.http.request('delete', `${this.base}${slug}/resource`, { body: payload });
   }
 
   updateStatus(slug: string, status: string): Observable<any> {

@@ -1,13 +1,13 @@
 <div class="container listing-form-page py-4">
   <div class="page-head mb-4">
-    <h2>Create a listing</h2>
+    <h2>{{ editSlug ? 'Edit listing' : 'Create a listing' }}</h2>
     <p class="text-muted">
       List your house, apartment, land or commercial space and connect
       directly with people looking for it.
     </p>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
+  <form [formGroup]="form">
     <!-- Basics -->
     <div class="form-card">
       <h5><i class="fa fa-home mr-2"></i>The basics</h5>
@@ -162,20 +162,39 @@
     </div>
 
     <!-- Photos -->
-    <div class="form-card">
+    <div class="form-card photo-upload-area">
       <h5><i class="fa fa-camera mr-2"></i>Photos <small class="text-muted">(up to {{ maxPhotos }})</small></h5>
       <input type="file" id="photo-input" accept="image/png,image/jpeg"
              multiple hidden (change)="onPhotosSelected($event)" />
       <label for="photo-input" class="btn btn-outline-primary"
-             [class.disabled]="photos.length >= maxPhotos">
+             [class.disabled]="totalPhotosCount >= maxPhotos">
         <i class="fa fa-plus mr-1"></i>Add photos
       </label>
-      <div class="photo-grid mt-3" *ngIf="photoPreviews.length">
+      <div class="photo-grid mt-3" *ngIf="existingMainPhoto || existingOtherPhotos.length || photoPreviews.length">
+        
+        <!-- Existing Main Photo -->
+        <div class="photo-cell main" *ngIf="existingMainPhoto">
+          <img [src]="existingMainPhoto" alt="Existing Main Photo" />
+          <span class="main-badge">Main photo (Saved)</span>
+        </div>
+
+        <!-- Existing Other Photos -->
+        <div class="photo-cell" *ngFor="let photo of existingOtherPhotos; let i = index">
+          <img [src]="photo" alt="Saved Photo {{ i + 1 }}" />
+          <div class="photo-actions">
+            <button type="button" class="btn btn-sm btn-light" (click)="removeExistingOtherPhoto(i)">
+              <i class="fa fa-trash text-danger"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- New Photos -->
         <div class="photo-cell" *ngFor="let preview of photoPreviews; let i = index"
-             [class.main]="i === mainPhotoIndex">
+             [class.main]="!existingMainPhoto && i === mainPhotoIndex">
           <img [src]="preview" alt="Photo {{ i + 1 }}" />
           <div class="photo-actions">
             <button type="button" class="btn btn-sm btn-light"
+                    *ngIf="!existingMainPhoto"
                     (click)="mainPhotoIndex = i"
                     [disabled]="i === mainPhotoIndex">
               <i class="fa fa-star"></i>
@@ -184,14 +203,20 @@
               <i class="fa fa-trash"></i>
             </button>
           </div>
-          <span class="main-badge" *ngIf="i === mainPhotoIndex">Main photo</span>
+          <span class="main-badge" *ngIf="!existingMainPhoto && i === mainPhotoIndex">Main photo</span>
         </div>
       </div>
     </div>
 
     <div class="text-right pb-5">
-      <button type="submit" class="btn btn-primary btn-lg px-5"
-              [disabled]="submitting">
+      <button type="button" class="btn btn-outline-secondary btn-lg px-4 mr-3"
+              [disabled]="submitting" (click)="submit('draft')">
+        <span *ngIf="!submitting">Save as Draft</span>
+        <span *ngIf="submitting"><i class="fa fa-spinner fa-spin mr-1"></i>Saving…</span>
+      </button>
+
+      <button type="button" class="btn btn-primary btn-lg px-5"
+              [disabled]="submitting" (click)="submit('publish')">
         <span *ngIf="!submitting">Publish listing</span>
         <span *ngIf="submitting"><i class="fa fa-spinner fa-spin mr-1"></i>Publishing…</span>
       </button>
