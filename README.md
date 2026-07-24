@@ -1,4 +1,4 @@
-# LandVilleFrontend [![CircleCI](https://circleci.com/gh/LandVilleng/LandVille-frontend.svg?style=svg)](https://circleci.com/gh/LandVilleng/LandVille-frontend) [![Coverage Status](https://coveralls.io/repos/github/LandVilleng/LandVille-frontend/badge.svg)](https://coveralls.io/github/LandVilleng/LandVille-frontend)  <a href="https://codeclimate.com/github/LandVilleng/LandVille-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/63814c9811ef8dde1aeb/maintainability" /></a>
+# LandVilleFrontend [![Coverage Status](https://coveralls.io/repos/github/patrickf949/landville-frontend/badge.svg?branch=develop)](https://coveralls.io/github/patrickf949/landville-frontend?branch=develop)  <a href="https://codeclimate.com/github/LandVilleng/LandVille-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/63814c9811ef8dde1aeb/maintainability" /></a>
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.3.
 
