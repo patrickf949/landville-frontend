@@ -53,6 +53,7 @@
     "@types/node": "^25.9.3",
     "@vitest/coverage-v8": "^4.1.8",
     "coveralls-next": "^6.0.2",
+    "istanbul-lib-instrument": "^6.0.3",
     "jasmine-core": "^6.3.0",
     "jsdom": "^29.1.1",
     "karma": "^6.4.4",
