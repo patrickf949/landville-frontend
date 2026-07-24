@@ -8,7 +8,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Production server
 
-Navigate to `https://LandVille-frontend.herokuapp.com/` and you'll be served with this application's frontend interface.
+Navigate to `https://LandVille.vercel.app/` and you'll be served with this application's frontend interface.
 
 ## Code scaffolding
 
