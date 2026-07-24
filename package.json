@@ -29,6 +29,7 @@
     "@angular/ssr": "22.0.1",
     "@auth0/angular-jwt": "^5.2.0",
     "@fortawesome/fontawesome-free": "^7.2.0",
+    "@ngxpert/hot-toast": "^6.4.1",
     "@popperjs/core": "^2.11.8",
     "@uiowa/digit-only": "^4.1.0",
     "angular-svg-round-progressbar": "^15.0.0",
@@ -38,9 +39,7 @@
     "express": "^5.2.1",
     "google-libphonenumber": "^3.2.44",
     "ngx-pagination": "^6.0.3",
-    "ngx-sonner": "^3.1.0",
     "ngx-spinner": "^21.1.0",
-    "ngx-toastr": "^20.0.5",
     "rxjs": "^7.8.2",
     "tslib": "^2.8.1",
     "zone.js": "~0.16.2"
@@ -65,8 +64,8 @@
     "vitest": "^4.1.8"
   },
   "engines": {
-    "node": ">=24.0.0",
-    "npm": ">=11.0.0"
+    "node": "24.16.0",
+    "npm": "11.13.0"
   },
   "overrides": {
     "esbuild": "0.28.1"

@@ -30,7 +30,13 @@ export class PropertiesComponent implements OnInit {
   loading = false;
 
   // filters
-  filters: PropertyFilters = {};
+  filters: PropertyFilters = {
+    listing_type: '',
+    property_type: '',
+    distance_to_main_road: '',
+    distance_to_city: '',
+    noise_level: ''
+  };
   amenities: any[] = [];
   nearbyFeatures: any[] = [];
   selectedAmenities = new Set<number>();
@@ -122,7 +128,13 @@ export class PropertiesComponent implements OnInit {
   }
 
   clearFilters(): void {
-    this.filters = {};
+    this.filters = {
+      listing_type: '',
+      property_type: '',
+      distance_to_main_road: '',
+      distance_to_city: '',
+      noise_level: ''
+    };
     this.selectedAmenities.clear();
     this.selectedNearby.clear();
     this.search();

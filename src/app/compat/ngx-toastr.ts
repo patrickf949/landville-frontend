@@ -1,5 +1,5 @@
 import { Injectable, ModuleWithProviders, NgModule } from '@angular/core';
-import { NgxSonnerToaster, toast } from 'ngx-sonner';
+import { HotToastService, provideHotToastConfig } from '@ngxpert/hot-toast';
 
 type ToastInput = string | Error | unknown;
 
@@ -7,11 +7,9 @@ function toastMessage(message: ToastInput): string {
   if (message instanceof Error) {
     return message.message;
   }
-
   if (typeof message === 'string') {
     return message;
   }
-
   try {
     return JSON.stringify(message);
   } catch {
@@ -21,36 +19,42 @@ function toastMessage(message: ToastInput): string {
 
 @Injectable({ providedIn: 'root' })
 export class ToastrService {
+  constructor(private toast: HotToastService) {}
+
   success(message: ToastInput, title?: string, _options?: unknown): void {
-    toast.success(toastMessage(title || message), title ? { description: toastMessage(message) } : undefined);
+    const msg = title ? `${title}: ${toastMessage(message)}` : toastMessage(message);
+    this.toast.success(msg);
   }
 
   error(message: ToastInput, title?: string, _options?: unknown): void {
-    toast.error(toastMessage(title || message), title ? { description: toastMessage(message) } : undefined);
+    const msg = title ? `${title}: ${toastMessage(message)}` : toastMessage(message);
+    this.toast.error(msg);
   }
 
   info(message: ToastInput, title?: string, _options?: unknown): void {
-    toast.info(toastMessage(title || message), title ? { description: toastMessage(message) } : undefined);
+    const msg = title ? `${title}: ${toastMessage(message)}` : toastMessage(message);
+    this.toast.info(msg);
   }
 
   warning(message: ToastInput, title?: string, _options?: unknown): void {
-    toast.warning(toastMessage(title || message), title ? { description: toastMessage(message) } : undefined);
+    const msg = title ? `${title}: ${toastMessage(message)}` : toastMessage(message);
+    this.toast.warning(msg);
   }
 
   clear(): void {
-    toast.dismiss();
+    this.toast.close();
   }
 }
 
-@NgModule({
-  imports: [NgxSonnerToaster],
-  exports: [NgxSonnerToaster]
-})
+@NgModule({})
 export class ToastrModule {
   static forRoot(): ModuleWithProviders<ToastrModule> {
     return {
       ngModule: ToastrModule,
-      providers: [ToastrService]
+      providers: [
+        ToastrService,
+        provideHotToastConfig()
+      ]
     };
   }
 }
