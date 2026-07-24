@@ -25,11 +25,11 @@ jobs:
   coveralls:
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    needs: [test-linux, test-macos, test-windows]
+    needs: [test-linux]
     steps:
     - uses: coverallsapp/github-action@v2
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       with:
-        carryforward: "ubuntu,macos,windows"
+        carryforward: "ubuntu"
         parallel-finished: true
