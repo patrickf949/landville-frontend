@@ -57,6 +57,7 @@ describe('PersonalInformationComponent', () => {
 
   beforeEach(() => {
     localStorage.clear();
+    profileServiceSpy.userProfile$ = of(mockProfileResponse);
     fixture = TestBed.createComponent(PersonalInformationComponent);
     component = fixture.componentInstance;
     de = fixture.debugElement.query(By.css('form'));
@@ -79,12 +80,15 @@ describe('PersonalInformationComponent', () => {
     expect(component.saveProfile).toBeTruthy();
   }));
   it('should trigger form submission if button is clicked', () => {
-    fixture.detectChanges();
-    spyOn(component, 'saveProfile');
-    const el = fixture.debugElement.query(By.css('.btn-form-blue-profile'))
-      .nativeElement;
+    const fix = TestBed.createComponent(PersonalInformationComponent);
+    const comp = fix.componentInstance;
+    const saveSpy = spyOn(comp, 'saveProfile');
+    profileServiceSpy.getProfile.and.returnValue(of(mockProfileResponse));
+    comp.setProfile();
+    fix.detectChanges();
+    const el = fix.debugElement.query(By.css('.btn-form-blue-profile')).nativeElement;
     el.click();
-    expect(component.saveProfile).toHaveBeenCalledTimes(1);
+    expect(saveSpy).toHaveBeenCalledTimes(1);
   });
 
   it('Should show a toast message when the response from server returns form validation error', waitForAsync(() => {
@@ -97,4 +101,11 @@ describe('PersonalInformationComponent', () => {
               phone: Phone number must be of the format +234 123 4567890`;
     expect(toastServiceSpy.error).toHaveBeenCalledWith(errorMessage);
   }));
+
+  it('should handle error in setProfile subscription', () => {
+    profileServiceSpy.userProfile$ = throwError(() => ({ error: { errors: 'Could not fetch profile' } }));
+    component.setProfile();
+    expect(toastServiceSpy.error).toHaveBeenCalledWith('Could not fetch profile');
+    profileServiceSpy.userProfile$ = of(mockProfileResponse);
+  });
 });

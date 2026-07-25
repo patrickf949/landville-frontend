@@ -19,7 +19,7 @@ import {
 } from 'src/app/helpers/tests/mocks';
 import { By } from '@angular/platform-browser';
 import { NgForm } from '@angular/forms';
-import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { RoleTransformPipe } from 'src/app/pipes/role.pipe';
 
 describe('ProfileSidebarComponent', () => {
@@ -58,6 +58,7 @@ describe('ProfileSidebarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProfileSidebarComponent);
     component = fixture.componentInstance;
+    profileServiceSpy.userProfile$ = of(mockProfileResponse);
     profileServiceSpy.getProfile.and.returnValue(of(mockProfileResponse));
     fixture.detectChanges();
   });
@@ -119,7 +120,29 @@ describe('ProfileSidebarComponent', () => {
     spyOn(component, 'generateRandomAvatar');
     expect(component.generateRandomAvatar).toHaveBeenCalledTimes(0);
   });
+
+  it('should hide spinner when userProfile$ throws an exception in fetchProfile', () => {
+    const spinner = TestBed.inject(NgxSpinnerService);
+    spyOn(spinner, 'hide');
+    profileServiceSpy.userProfile$ = throwError(() => new Error('profile fetch error'));
+    component.fetchProfile();
+    expect(spinner.hide).toHaveBeenCalled();
+    profileServiceSpy.userProfile$ = of(mockProfileResponse);
+  });
+
+  it('should show error toast and clear input if image size exceeds 500KB in updateImage', () => {
+    const event = {
+      target: {
+        files: [{ name: 'large_image.jpg', size: 500 * 1024 + 1 }],
+        value: 'C:\\fakepath\\large_image.jpg'
+      }
+    };
+    component.updateImage(event);
+    expect(toastServiceSpy.error).toHaveBeenCalledWith('The profile picture exceeds the 500KB limit.');
+    expect(event.target.value).toBe('');
+  });
 });
+
 
 describe('ProfileSidebarComponent', () => {
   let component: ProfileSidebarComponent;
