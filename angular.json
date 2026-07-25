@@ -104,7 +104,7 @@
           "options": {
             "buildTarget": "landville-frontend:build:development",
             "runner": "karma",
-            "runnerConfig": false,
+            "runnerConfig": "karma.conf.js",
             "tsConfig": "tsconfig.spec.json",
             "include": [
               "src/**/*.spec.ts"
