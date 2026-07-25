@@ -31,12 +31,15 @@ describe('PasswordResetService', () => {
     });
 
   it('should throw an error when invalid email is provided', () => {
-      const service: PasswordResetService = TestBed.inject(PasswordResetService);
-      const mockData = {
-        email: 'joelandela.com'
-      };
-      service.getResetLink(mockData).subscribe();
-      const req = httpMock.expectOne(url);
-      req.flush(mockData);
-      });
+    const service: PasswordResetService = TestBed.inject(PasswordResetService);
+    const mockData = {
+      email: 'joelandela.com'
+    };
+    service.getResetLink(mockData).subscribe({
+      error: (err) => expect(err).toBeTruthy()
+    });
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('POST');
+    req.flush('Invalid email', { status: 400, statusText: 'Bad Request' });
+  });
 });

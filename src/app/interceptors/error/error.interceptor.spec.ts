@@ -1,53 +1,72 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ErrorInterceptor } from 'src/app/interceptors/error/error.interceptor';
-import { httpHandlerSpy, httpRequestSpy, localStorageSpy, routerSpy } from 'src/app/helpers/tests/spies';
-import { HttpHandler, HttpRequest } from '@angular/common/http';
-import { throwError } from 'rxjs';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { of } from 'rxjs';
+
+import { ErrorInterceptor } from './error.interceptor';
+import { LoginService } from 'src/app/services/login/login.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 describe('ErrorInterceptor', () => {
-  let errorInterceptor: ErrorInterceptor;
-  let MockLoginService;
+  let httpMock: HttpTestingController;
+  let httpClient: HttpClient;
+  let loginServiceSpy: jasmine.SpyObj<LoginService>;
+  let localStorageSpy: jasmine.SpyObj<LocalStorageService>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    MockLoginService = jasmine.createSpyObj([ 'logoutUser' ]);
+    loginServiceSpy = jasmine.createSpyObj('LoginService', ['logoutUser']);
+    localStorageSpy = jasmine.createSpyObj('LocalStorageService', ['clear']);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    (routerSpy as any).url = '/current-page';
 
-    errorInterceptor = new ErrorInterceptor(MockLoginService, routerSpy, localStorageSpy);
+    loginServiceSpy.logoutUser.and.returnValue(of({}));
 
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, RouterTestingModule],
       providers: [
-        ErrorInterceptor,
-        {provide: HttpRequest, useValue: httpRequestSpy},
-        {provide: HttpHandler, useValue: httpHandlerSpy},
-      ],
-      imports: [HttpClientTestingModule]
-    });
-  });
-
-  it('should create', () => {
-    expect(errorInterceptor).toBeTruthy();
-  });
-
-  it('should auto logout if 401 response returned from api', () => {
-    // arrange
-    httpHandlerSpy.handle.and.returnValue(throwError({
-      error: {
-        message: 'test-error'
-      }
-    }));
-    // act
-    errorInterceptor.intercept(httpRequestSpy, httpHandlerSpy)
-      .subscribe(
-        result => console.log('good', result),
-        err => {
-          console.log('error', err);
-          expect(err).toEqual({
-            error: {
-              message: 'test-error'
-            }
-          });
+        { provide: LoginService, useValue: loginServiceSpy },
+        { provide: LocalStorageService, useValue: localStorageSpy },
+        { provide: Router, useValue: routerSpy },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: ErrorInterceptor,
+          multi: true
         }
-      );
+      ]
+    });
+
+    httpClient = TestBed.inject(HttpClient);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should handle 401 error, clear localStorage, and redirect to login', () => {
+    httpClient.get('/test-url').subscribe({
+      error: (err) => {
+        expect(err.status).toBe(401);
+      }
+    });
+
+    const req = httpMock.expectOne('/test-url');
+    req.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
+
+    expect(localStorageSpy.clear).toHaveBeenCalled();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login'], { queryParams: { next: '/current-page' } });
+    expect(loginServiceSpy.logoutUser).toHaveBeenCalled();
+  });
+
+  it('should pass through normal responses without error', () => {
+    httpClient.get('/normal-url').subscribe(res => {
+      expect(res).toEqual({ data: 'ok' });
+    });
+
+    const req = httpMock.expectOne('/normal-url');
+    req.flush({ data: 'ok' });
+  });
 });

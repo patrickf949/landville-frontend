@@ -1,48 +1,61 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { httpHandlerSpy, httpRequestSpy } from 'src/app/helpers/tests/spies';
-import { HttpHandler, HttpRequest } from '@angular/common/http';
-import { of } from 'rxjs';
-import { JwtInterceptor } from 'src/app/interceptors/jwt/jwt.interceptor';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 
-const mockAuthService = jasmine.createSpyObj(['isLoggedIn']);
-const mockLocalStorageService = jasmine.createSpyObj(['get']);
+import { JwtInterceptor } from './jwt.interceptor';
+import { AuthService } from 'src/app/services/auth.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
-describe('JWTInterceptor', () => {
-  let jwtInterceptor: JwtInterceptor;
-
+describe('JwtInterceptor', () => {
+  let httpMock: HttpTestingController;
+  let httpClient: HttpClient;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let localStorageSpy: jasmine.SpyObj<LocalStorageService>;
 
   beforeEach(() => {
-    jwtInterceptor = new JwtInterceptor(mockAuthService, mockLocalStorageService as any);
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
+    localStorageSpy = jasmine.createSpyObj('LocalStorageService', ['get']);
 
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [
-        JwtInterceptor,
-        { provide: HttpRequest, useValue: httpRequestSpy },
-        { provide: HttpHandler, useValue: httpHandlerSpy },
-      ],
-      imports: [HttpClientTestingModule]
+        { provide: AuthService, useValue: authServiceSpy },
+        { provide: LocalStorageService, useValue: localStorageSpy },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: JwtInterceptor,
+          multi: true
+        }
+      ]
     });
+
+    httpClient = TestBed.inject(HttpClient);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should create', () => {
-    expect(jwtInterceptor).toBeTruthy();
+  afterEach(() => {
+    httpMock.verify();
   });
 
-  it('should auto populate jwt headers in the request', () => {
-    // arrange
-    httpHandlerSpy.handle.and.returnValue(of({
-      data: {
-        message: 'data'
-      }
-    }));
-    // act
-    jwtInterceptor.intercept(httpRequestSpy, httpHandlerSpy)
-      .subscribe(
-        result => {
-          expect(result).toBeTruthy();
-        },
-      );
+  it('should add Authorization header when user is logged in', () => {
+    authServiceSpy.isLoggedIn.and.returnValue(true);
+    localStorageSpy.get.and.returnValue('my-jwt-token');
+
+    httpClient.get('/api/protected').subscribe();
+
+    const req = httpMock.expectOne('/api/protected');
+    expect(req.request.headers.has('Authorization')).toBeTrue();
+    expect(req.request.headers.get('Authorization')).toBe('Bearer my-jwt-token');
+    req.flush({});
   });
 
+  it('should not add Authorization header when user is not logged in', () => {
+    authServiceSpy.isLoggedIn.and.returnValue(false);
+
+    httpClient.get('/api/public').subscribe();
+
+    const req = httpMock.expectOne('/api/public');
+    expect(req.request.headers.has('Authorization')).toBeFalse();
+    req.flush({});
+  });
 });
