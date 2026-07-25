@@ -34,7 +34,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Running a clean install
 
-Run `install:clean` to execute a clean installation and starting the the application
+Run `install:clean` to execute a clean installation and start the application
 
 ## Browser Support
 
