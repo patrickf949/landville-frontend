@@ -86,4 +86,38 @@ describe('ClientReviewsComponent', () => {
       'Details: No reviews yet'
     );
   });
+
+  it('should render reviewer profile image when image exists in review', () => {
+    const images = fixture.debugElement.queryAll(By.css('.profilepic'));
+    expect(images.length).toBeGreaterThan(0);
+    expect(images[0].nativeElement.getAttribute('src')).toBe('http://res.cloudinary.com/landville/image/upload/v1567094295/yhhaucrvkdgjqiizef6n.png');
+  });
+
+  it('should render default profileImage when reviewer image is null or undefined', () => {
+    const responseWithNoImage = {
+      count: 1,
+      next: null,
+      previous: null,
+      results: [
+        {
+          id: 1,
+          created_at: '2019-08-29T07:10:20.158541Z',
+          review: 'Great service',
+          reviewer: {
+            first_name: 'John',
+            last_name: 'Doe',
+            image: null
+          }
+        }
+      ]
+    };
+    reviewsSpy.getReviews.and.returnValue(of(responseWithNoImage));
+    component.fetchReviews(1);
+    fixture.detectChanges();
+
+    const images = fixture.debugElement.queryAll(By.css('.profilepic'));
+    expect(images.length).toBe(1);
+    expect(images[0].nativeElement.getAttribute('src')).toBe('assets/img/people.png');
+  });
 });
+
