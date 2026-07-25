@@ -1,0 +1,21 @@
+name: Test Linux & Upload Coverage
+
+on: [ push, pull_request ]
+
+jobs:
+  test-linux:
+    uses: ./.github/workflows/test.yml
+    secrets:
+      token: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
+  coveralls:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: [test-linux]
+    steps:
+    - uses: coverallsapp/github-action@v2
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      with:
+        carryforward: "ubuntu"
+        parallel-finished: true

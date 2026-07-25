@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 
 
 @Component({
+  standalone: false,
   selector: 'app-reviews',
   templateUrl: './reviews.component.html',
   styleUrls: ['./reviews.component.scss']

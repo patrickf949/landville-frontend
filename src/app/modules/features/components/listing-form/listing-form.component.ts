@@ -1,0 +1,334 @@
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { PropertiesService } from 'src/app/services/properties/properties.service';
+
+interface CatalogueItem { id: number; name: string; icon: string; group?: string; group_display?: string; }
+
+@Component({
+  selector: 'app-listing-form',
+  standalone: false,
+  templateUrl: './listing-form.component.html',
+  styleUrls: ['./listing-form.component.scss']
+})
+export class ListingFormComponent implements OnInit {
+  form: FormGroup;
+  amenities: CatalogueItem[] = [];
+  nearbyFeatures: CatalogueItem[] = [];
+  selectedAmenities = new Set<number>();
+  selectedNearby = new Set<number>();
+  photos: File[] = [];
+  photoPreviews: string[] = [];
+  mainPhotoIndex = 0;
+  submitting = false;
+  maxPhotos = 5;
+
+  listingTypes = [
+    { value: 'S', label: 'For Sale' },
+    { value: 'R', label: 'For Rent' },
+  ];
+  propertyTypes = [
+    { value: 'H', label: 'House' },
+    { value: 'A', label: 'Apartment' },
+    { value: 'L', label: 'Land' },
+    { value: 'C', label: 'Commercial' },
+    { value: 'R', label: 'Room / Shared' },
+  ];
+  rentPeriods = [
+    { value: 'M', label: 'Monthly' },
+    { value: 'Y', label: 'Yearly' },
+  ];
+  roadDistances = [
+    { value: '1', label: 'Less than 500 m' },
+    { value: '2', label: '500 m – 2 km' },
+    { value: '3', label: '2 – 5 km' },
+    { value: '4', label: 'More than 5 km' },
+  ];
+  cityDistances = [
+    { value: '1', label: 'Less than 5 km' },
+    { value: '2', label: '5 – 20 km' },
+    { value: '3', label: '20 – 50 km' },
+    { value: '4', label: 'More than 50 km' },
+  ];
+  noiseLevels = [
+    { value: 'Q', label: 'Quiet' },
+    { value: 'M', label: 'Moderate' },
+    { value: 'B', label: 'Busy' },
+  ];
+
+  editSlug: string | null = null;
+  existingMainPhoto: string | null = null;
+  existingOtherPhotos: string[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private propertiesService: PropertiesService,
+    private toastr: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.form = this.fb.group({
+      title: ['', [Validators.required, Validators.maxLength(255)]],
+      listing_type: ['S', Validators.required],
+      property_type: ['H', Validators.required],
+      rent_period: [null],
+      price: [null, [Validators.required, Validators.min(1)]],
+      description: ['', [Validators.required, Validators.minLength(30)]],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      street: ['', Validators.required],
+      lat: [null, Validators.required],
+      lon: [null, Validators.required],
+      bedrooms: [null],
+      bathrooms: [null],
+      garages: [null],
+      lot_size: [null, Validators.required],
+      distance_to_main_road: [null],
+      distance_to_city: [null],
+      noise_level: [null],
+    });
+  }
+
+  ngOnInit(): void {
+    this.propertiesService.getAmenities().subscribe(
+      (data: any) => {
+        this.amenities = data || [];
+        this.cdr.detectChanges();
+      });
+    this.propertiesService.getNearbyFeatures().subscribe(
+      (data: any) => {
+        this.nearbyFeatures = data || [];
+        this.cdr.detectChanges();
+      });
+    this.form.get('listing_type').valueChanges.subscribe(value => {
+      const rentPeriod = this.form.get('rent_period');
+      if (value === 'R') {
+        rentPeriod.setValidators([Validators.required]);
+      } else {
+        rentPeriod.clearValidators();
+        rentPeriod.setValue(null);
+      }
+      rentPeriod.updateValueAndValidity();
+      this.cdr.detectChanges();
+    });
+
+    this.editSlug = this.route.snapshot.params['slug'];
+    if (this.editSlug) {
+      this.loadPropertyData();
+    }
+  }
+
+  loadPropertyData(): void {
+    this.propertiesService.getProperty(this.editSlug).subscribe({
+      next: (res) => {
+        const prop = res.data?.property || res;
+        this.form.patchValue({
+          title: prop.title,
+          listing_type: prop.listing_type,
+          property_type: prop.property_type,
+          rent_period: prop.rent_period,
+          price: prop.price,
+          description: prop.description,
+          city: prop.address?.City || '',
+          state: prop.address?.State || '',
+          street: prop.address?.Street || '',
+          lat: prop.coordinates?.lat,
+          lon: prop.coordinates?.lon,
+          bedrooms: prop.bedrooms,
+          bathrooms: prop.bathrooms,
+          garages: prop.garages,
+          lot_size: prop.lot_size,
+          distance_to_main_road: prop.distance_to_main_road,
+          distance_to_city: prop.distance_to_city,
+          noise_level: prop.noise_level,
+        });
+
+        if (prop.amenities) {
+          prop.amenities.forEach((a: any) => this.selectedAmenities.add(a.id));
+        }
+        if (prop.nearby) {
+          prop.nearby.forEach((n: any) => this.selectedNearby.add(n.id));
+        }
+
+        this.existingMainPhoto = prop.image_main;
+        this.existingOtherPhotos = prop.image_others || [];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.toastr.error('Failed to load property data.');
+        this.router.navigate(['/my-listings']);
+      }
+    });
+  }
+
+  get isLand(): boolean {
+    return this.form.get('property_type').value === 'L';
+  }
+
+  get isRent(): boolean {
+    return this.form.get('listing_type').value === 'R';
+  }
+
+  get visibleAmenities(): CatalogueItem[] {
+    if (this.isLand) {
+      return this.amenities.filter(a => ['L', 'U', 'S'].includes(a.group));
+    }
+    return this.amenities.filter(a => a.group !== 'L');
+  }
+
+  get totalPhotosCount(): number {
+    let count = this.photos.length;
+    if (this.existingMainPhoto) count++;
+    count += this.existingOtherPhotos.length;
+    return count;
+  }
+
+  toggle(set: Set<number>, id: number): void {
+    set.has(id) ? set.delete(id) : set.add(id);
+  }
+
+  onCoords(coords: { lat: number; lon: number }): void {
+    this.form.patchValue({
+      lat: +coords.lat.toFixed(6),
+      lon: +coords.lon.toFixed(6)
+    });
+  }
+
+  onPhotosSelected(event: any): void {
+    const files: File[] = Array.from(event.target.files || []);
+    for (const file of files) {
+      if (file.size > 500 * 1024) {
+        this.toastr.error(`The photo "${file.name}" exceeds the 500KB limit.`);
+        continue;
+      }
+      if (this.totalPhotosCount >= this.maxPhotos) {
+        this.toastr.warning(
+          `You can upload a maximum of ${this.maxPhotos} photos.`);
+        break;
+      }
+      this.photos.push(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.photoPreviews.push(reader.result as string);
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    }
+    event.target.value = '';
+    this.cdr.detectChanges();
+  }
+
+  removePhoto(index: number): void {
+    this.photos.splice(index, 1);
+    this.photoPreviews.splice(index, 1);
+    if (this.mainPhotoIndex >= this.photos.length) {
+      this.mainPhotoIndex = 0;
+    }
+    this.cdr.detectChanges();
+  }
+
+  removeExistingOtherPhoto(index: number): void {
+    if (!this.editSlug) return;
+    const photoUrl = this.existingOtherPhotos[index];
+    this.propertiesService.deletePropertyResource(this.editSlug, { image_others: [photoUrl] })
+      .subscribe({
+        next: () => {
+          this.existingOtherPhotos.splice(index, 1);
+          this.toastr.success('Photo removed successfully.');
+          this.cdr.detectChanges();
+        },
+        error: () => this.toastr.error('Failed to remove photo.')
+      });
+  }
+
+  submit(action: 'draft' | 'publish'): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.toastr.error('Please complete all the required fields.');
+      this.cdr.detectChanges();
+      
+      const firstInvalidControl: HTMLElement = document.querySelector('form .ng-invalid');
+      if (firstInvalidControl) {
+        firstInvalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    if (this.totalPhotosCount === 0) {
+      this.toastr.error('Please add at least one photo of the property.');
+      this.cdr.detectChanges();
+      
+      const photoUploadArea: HTMLElement = document.querySelector('.photo-upload-area');
+      if (photoUploadArea) {
+        photoUploadArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    const value = this.form.value;
+    const payload = new FormData();
+    payload.append('title', value.title);
+    payload.append('listing_type', value.listing_type);
+    payload.append('property_type', value.property_type);
+    if (value.rent_period) { payload.append('rent_period', value.rent_period); }
+    payload.append('price', String(value.price));
+    payload.append('description', value.description);
+    payload.append('lot_size', String(value.lot_size));
+    payload.append('address', JSON.stringify({
+      City: value.city, State: value.state, Street: value.street }));
+    payload.append('coordinates', JSON.stringify({
+      lat: value.lat, lon: value.lon }));
+    if (!this.isLand) {
+      ['bedrooms', 'bathrooms', 'garages'].forEach(field => {
+        if (value[field] != null) {
+          payload.append(field, String(value[field]));
+        }
+      });
+    }
+    ['distance_to_main_road', 'distance_to_city', 'noise_level'].forEach(
+      field => {
+        if (value[field]) { payload.append(field, value[field]); }
+      });
+    this.selectedAmenities.forEach(
+      id => payload.append('amenities', String(id)));
+    this.selectedNearby.forEach(id => payload.append('nearby', String(id)));
+
+    payload.append('is_published', action === 'publish' ? 'true' : 'false');
+
+    // Only append new photos
+    if (this.photos.length > 0) {
+      // If we don't have an existing main photo, make the first new photo the main photo
+      const newMainIndex = this.existingMainPhoto ? -1 : this.mainPhotoIndex;
+      
+      this.photos.forEach((photo, i) => {
+        if (i === newMainIndex) {
+          payload.append('image_main', photo, photo.name);
+        } else {
+          payload.append('image_others', photo, photo.name);
+        }
+      });
+    }
+
+    this.submitting = true;
+    
+    const requestObservable = this.editSlug 
+      ? this.propertiesService.updateProperty(this.editSlug, payload)
+      : this.propertiesService.createProperty(payload);
+
+    requestObservable.subscribe({
+      next: () => {
+        this.toastr.success(this.editSlug ? 'Listing updated successfully!' : 'Your listing has been created!');
+        this.router.navigate(['/my-listings']);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.submitting = false;
+        const errors = err?.error?.errors || err?.error || {};
+        const first = Object.values(errors)[0];
+        this.toastr.error(
+          Array.isArray(first) ? String(first[0]) : String(first || 'Something went wrong. Please try again.'));
+        this.cdr.detectChanges();
+      }
+    });
+  }
+}

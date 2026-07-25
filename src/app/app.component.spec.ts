@@ -1,7 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed , waitForAsync} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from 'src/app/app.component';
-import { configureTestSuite} from 'ng-bullet';
 import { localStorageSpy } from 'src/app/helpers/tests/spies';
 import {NavbarComponent} from 'src/app/modules/shared/components/navbar/navbar.component';
 import {FooterComponent} from 'src/app/modules/shared/components/footer/footer.component';
@@ -13,7 +12,7 @@ describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
-  configureTestSuite(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       declarations: [
@@ -27,7 +26,7 @@ describe('AppComponent', () => {
         { provide: HttpClient, },
       ]
     }).compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);

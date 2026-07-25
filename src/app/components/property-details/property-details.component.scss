@@ -29,3 +29,129 @@
     padding: inherit;
     outline:none;
 }
+
+/* --- LandVille details layout --- */
+.details-page {
+  .badge-row { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+  .tag {
+    background: #f0f3fc;
+    color: #1e3d96;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 3px 12px;
+
+    &.primary { background: #1e3d96; color: #fff; }
+    &.closed { background: #98a2b3; color: #fff; }
+  }
+
+  .info-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(30, 61, 150, 0.08);
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+
+    h5 { font-weight: 700; color: #1e3d96; margin-bottom: 1rem; }
+    .group-label {
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 0.68rem;
+      color: #98a2b3;
+    }
+  }
+
+  .quality {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+
+    i { color: #ffc421; font-size: 1.2rem; width: 24px; text-align: center; }
+    small { display: block; color: #98a2b3; }
+  }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+  .chip {
+    border: 1.5px solid #dbe2f5;
+    background: #f7f9ff;
+    color: #33415c;
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.75rem;
+  }
+
+  .details-map { height: 320px; }
+
+  .connect-card {
+    .avatar {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 0.6rem;
+      border-radius: 50%;
+      background: #f0f3fc;
+      color: #1e3d96;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .owner-listings-link {
+      color: #1e3d96;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover { text-decoration: underline; }
+    }
+
+    .btn {
+      border-radius: 8px !important;
+      height: 2.8rem !important;
+      font-weight: 600 !important;
+      margin-bottom: 0.75rem !important;
+      margin-top: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+
+      &:last-of-type {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    .btn-warning {
+      background-color: #f8c302 !important;
+      border-color: #f8c302 !important;
+      color: #201541 !important;
+
+      &:hover {
+        background-color: #ee9619 !important;
+        border-color: #ee9619 !important;
+        color: #fff !important;
+      }
+    }
+  }
+}
+
+/* --- Mobile tweaks --- */
+@media (max-width: 767.98px) {
+  .details-page {
+    .details-map { height: 220px; }
+
+    .info-card {
+      padding: 1rem 1.1rem;
+      margin: 0.75rem 0;
+    }
+
+    .connect-card {
+      margin-top: 1rem !important;
+    }
+  }
+
+  .buttons { float: none; width: 100%; }
+}

@@ -1,0 +1,16 @@
+# Alternative free host: Netlify. (Render via render.yaml is the default —
+# use whichever you prefer; you don't need both.)
+# Set your backend URL in src/environments/environment.prod.ts before building.
+
+[build]
+  command = "npm ci && npm run build"
+  publish = "dist/landville-frontend/browser"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# SPA fallback so Angular client-side routes resolve.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

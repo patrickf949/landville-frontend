@@ -1,0 +1,225 @@
+<div class="container listing-form-page py-4">
+  <div class="page-head mb-4">
+    <h2>{{ editSlug ? 'Edit listing' : 'Create a listing' }}</h2>
+    <p class="text-muted">
+      List your house, apartment, land or commercial space and connect
+      directly with people looking for it.
+    </p>
+  </div>
+
+  <form [formGroup]="form">
+    <!-- Basics -->
+    <div class="form-card">
+      <h5><i class="fa fa-home mr-2"></i>The basics</h5>
+      <div class="row">
+        <div class="col-md-6 form-group">
+          <label>Title <span class="text-danger">*</span></label>
+          <input class="form-control" formControlName="title"
+                 [class.is-invalid]="form.get('title')?.invalid && form.get('title')?.touched"
+                 placeholder="e.g. 3-bedroom bungalow in Gwarinpa" />
+          <div class="invalid-feedback">Title is required.</div>
+        </div>
+        <div class="col-md-3 form-group">
+          <label>Listing type <span class="text-danger">*</span></label>
+          <select class="form-control" formControlName="listing_type"
+                  [class.is-invalid]="form.get('listing_type')?.invalid && form.get('listing_type')?.touched">
+            <option *ngFor="let t of listingTypes" [value]="t.value">{{ t.label }}</option>
+          </select>
+          <div class="invalid-feedback">Listing type is required.</div>
+        </div>
+        <div class="col-md-3 form-group">
+          <label>Property type <span class="text-danger">*</span></label>
+          <select class="form-control" formControlName="property_type"
+                  [class.is-invalid]="form.get('property_type')?.invalid && form.get('property_type')?.touched">
+            <option *ngFor="let t of propertyTypes" [value]="t.value">{{ t.label }}</option>
+          </select>
+          <div class="invalid-feedback">Property type is required.</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label>Price (₦) <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" formControlName="price"
+                 [class.is-invalid]="form.get('price')?.invalid && form.get('price')?.touched" />
+          <div class="invalid-feedback">Price is required.</div>
+        </div>
+        <div class="col-md-4 form-group" *ngIf="isRent">
+          <label>Rent period <span class="text-danger">*</span></label>
+          <select class="form-control" formControlName="rent_period"
+                  [class.is-invalid]="form.get('rent_period')?.invalid && form.get('rent_period')?.touched">
+            <option [ngValue]="null" disabled>Choose…</option>
+            <option *ngFor="let p of rentPeriods" [value]="p.value">{{ p.label }}</option>
+          </select>
+          <div class="invalid-feedback">Rent period is required.</div>
+        </div>
+        <div class="col-md-4 form-group">
+          <label>Lot size (acres) <span class="text-danger">*</span></label>
+          <input type="number" step="0.01" class="form-control" formControlName="lot_size"
+                 [class.is-invalid]="form.get('lot_size')?.invalid && form.get('lot_size')?.touched" />
+          <div class="invalid-feedback">Lot size is required.</div>
+        </div>
+      </div>
+      <div class="row" *ngIf="!isLand">
+        <div class="col-4 form-group">
+          <label>Bedrooms</label>
+          <input type="number" class="form-control" formControlName="bedrooms" />
+        </div>
+        <div class="col-4 form-group">
+          <label>Bathrooms</label>
+          <input type="number" class="form-control" formControlName="bathrooms" />
+        </div>
+        <div class="col-4 form-group">
+          <label>Garages</label>
+          <input type="number" class="form-control" formControlName="garages" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description <span class="text-danger">*</span></label>
+        <textarea class="form-control" rows="4" formControlName="description"
+                  [class.is-invalid]="form.get('description')?.invalid && form.get('description')?.touched"
+                  placeholder="Describe the property, its condition and what makes it a great deal (at least 30 characters)."></textarea>
+        <div class="invalid-feedback">Description is required (at least 30 characters).</div>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="form-card">
+      <h5><i class="fa fa-map-marker-alt mr-2"></i>Location</h5>
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label>City <span class="text-danger">*</span></label>
+          <input class="form-control" formControlName="city"
+                 [class.is-invalid]="form.get('city')?.invalid && form.get('city')?.touched" />
+          <div class="invalid-feedback">City is required.</div>
+        </div>
+        <div class="col-md-4 form-group">
+          <label>State <span class="text-danger">*</span></label>
+          <input class="form-control" formControlName="state"
+                 [class.is-invalid]="form.get('state')?.invalid && form.get('state')?.touched" />
+          <div class="invalid-feedback">State is required.</div>
+        </div>
+        <div class="col-md-4 form-group">
+          <label>Street <span class="text-danger">*</span></label>
+          <input class="form-control" formControlName="street"
+                 [class.is-invalid]="form.get('street')?.invalid && form.get('street')?.touched" />
+          <div class="invalid-feedback">Street is required.</div>
+        </div>
+      </div>
+      <p class="text-muted small mb-2">
+        Click the map (or drag the pin) to mark the exact spot.
+      </p>
+      <div class="map-holder mb-3">
+        <app-map mode="pick" [lat]="form.value.lat" [lon]="form.value.lon"
+                 (coordsChange)="onCoords($event)"></app-map>
+      </div>
+      <div class="row">
+        <div class="col-md-3 form-group">
+          <label>Distance to main road</label>
+          <select class="form-control" formControlName="distance_to_main_road">
+            <option [ngValue]="null">Not sure</option>
+            <option *ngFor="let d of roadDistances" [value]="d.value">{{ d.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-3 form-group">
+          <label>Distance to city / big town</label>
+          <select class="form-control" formControlName="distance_to_city">
+            <option [ngValue]="null">Not sure</option>
+            <option *ngFor="let d of cityDistances" [value]="d.value">{{ d.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-3 form-group">
+          <label>Noise level</label>
+          <select class="form-control" formControlName="noise_level">
+            <option [ngValue]="null">Not sure</option>
+            <option *ngFor="let n of noiseLevels" [value]="n.value">{{ n.label }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>What's nearby?</label>
+        <div class="chip-row">
+          <button type="button" class="chip"
+                  *ngFor="let f of nearbyFeatures"
+                  [class.active]="selectedNearby.has(f.id)"
+                  (click)="toggle(selectedNearby, f.id)">
+            <i class="fa {{ f.icon }} mr-1"></i>{{ f.name }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Amenities -->
+    <div class="form-card">
+      <h5><i class="fa fa-check-circle mr-2"></i>Amenities</h5>
+      <div class="chip-row">
+        <button type="button" class="chip"
+                *ngFor="let a of visibleAmenities"
+                [class.active]="selectedAmenities.has(a.id)"
+                (click)="toggle(selectedAmenities, a.id)">
+          <i class="fa {{ a.icon }} mr-1"></i>{{ a.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Photos -->
+    <div class="form-card photo-upload-area">
+      <h5><i class="fa fa-camera mr-2"></i>Photos <small class="text-muted">(up to {{ maxPhotos }})</small></h5>
+      <input type="file" id="photo-input" accept="image/png,image/jpeg"
+             multiple hidden (change)="onPhotosSelected($event)" />
+      <label for="photo-input" class="btn btn-outline-primary"
+             [class.disabled]="totalPhotosCount >= maxPhotos">
+        <i class="fa fa-plus mr-1"></i>Add photos
+      </label>
+      <div class="photo-grid mt-3" *ngIf="existingMainPhoto || existingOtherPhotos.length || photoPreviews.length">
+        
+        <!-- Existing Main Photo -->
+        <div class="photo-cell main" *ngIf="existingMainPhoto">
+          <img [src]="existingMainPhoto" alt="Existing Main Photo" />
+          <span class="main-badge">Main photo (Saved)</span>
+        </div>
+
+        <!-- Existing Other Photos -->
+        <div class="photo-cell" *ngFor="let photo of existingOtherPhotos; let i = index">
+          <img [src]="photo" alt="Saved Photo {{ i + 1 }}" />
+          <div class="photo-actions">
+            <button type="button" class="btn btn-sm btn-light" (click)="removeExistingOtherPhoto(i)">
+              <i class="fa fa-trash text-danger"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- New Photos -->
+        <div class="photo-cell" *ngFor="let preview of photoPreviews; let i = index"
+             [class.main]="!existingMainPhoto && i === mainPhotoIndex">
+          <img [src]="preview" alt="Photo {{ i + 1 }}" />
+          <div class="photo-actions">
+            <button type="button" class="btn btn-sm btn-light"
+                    *ngIf="!existingMainPhoto"
+                    (click)="mainPhotoIndex = i"
+                    [disabled]="i === mainPhotoIndex">
+              <i class="fa fa-star"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-light" (click)="removePhoto(i)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+          <span class="main-badge" *ngIf="!existingMainPhoto && i === mainPhotoIndex">Main photo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-right pb-5">
+      <button type="button" class="btn btn-outline-secondary btn-lg px-4 mr-3"
+              [disabled]="submitting" (click)="submit('draft')">
+        <span *ngIf="!submitting">Save as Draft</span>
+        <span *ngIf="submitting"><i class="fa fa-spinner fa-spin mr-1"></i>Saving…</span>
+      </button>
+
+      <button type="button" class="btn btn-primary btn-lg px-5"
+              [disabled]="submitting" (click)="submit('publish')">
+        <span *ngIf="!submitting">Publish listing</span>
+        <span *ngIf="submitting"><i class="fa fa-spinner fa-spin mr-1"></i>Publishing…</span>
+      </button>
+    </div>
+  </form>
+</div>

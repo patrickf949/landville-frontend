@@ -1,0 +1,147 @@
+<div class="container py-5 transaction-history-page">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Transaction History</h2>
+    
+    <!-- Tab Controls -->
+    <div class="btn-group shadow-sm rounded overflow-hidden">
+      <button class="btn btn-tab" [class.active]="activeTab === 'properties'" (click)="switchTab('properties')">
+        Property Payments
+      </button>
+      <button class="btn btn-tab" [class.active]="activeTab === 'deposits'" (click)="switchTab('deposits')">
+        All Deposits
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading transactions...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <!-- Property Payments Tab -->
+    <div *ngIf="activeTab === 'properties'">
+      <div class="card shadow-sm border-0 premium-card p-4" *ngIf="transactions.length > 0; else noTransactions">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Price</th>
+                <th>Paid So Far</th>
+                <th>Balance</th>
+                <th>Acquisition Progress</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let tx of transactions; let i = index">
+                <tr class="transaction-row" (click)="toggleRow(i)">
+                  <td class="font-weight-bold color-primary">{{ tx.title }}</td>
+                  <td>₦{{ tx.price | number:'1.2-2' }}</td>
+                  <td class="text-success font-weight-bold">₦{{ tx.total_amount_paid | number:'1.2-2' }}</td>
+                  <td class="text-danger">₦{{ tx.balance | number:'1.2-2' }}</td>
+                  <td>
+                    <div class="progress-box">
+                      <div class="progress" style="height: 10px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                             [style.width]="tx.percentage_completion + '%'"
+                             [attr.aria-valuenow]="tx.percentage_completion" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <small class="text-muted font-weight-bold">{{ tx.percentage_completion }}% Completed</small>
+                    </div>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-secondary">
+                      <i class="fa" [class.fa-chevron-down]="expandedRowIndex !== i" [class.fa-chevron-up]="expandedRowIndex === i"></i>
+                      Deposits
+                    </button>
+                  </td>
+                </tr>
+
+                <!-- Expanded Row for Deposits -->
+                <tr *ngIf="expandedRowIndex === i" class="expanded-deposits-row">
+                  <td colspan="6" class="bg-light p-4">
+                    <h6 class="font-weight-bold mb-3">Deposit Breakdown for {{ tx.title }}</h6>
+                    <div class="table-responsive" *ngIf="tx.deposits?.length > 0; else noDeposits">
+                      <table class="table table-sm table-bordered bg-white">
+                        <thead>
+                          <tr class="thead-light">
+                            <th>Transaction Date</th>
+                            <th>Amount Deposited</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let dep of tx.deposits">
+                            <td>{{ dep.date | date:'medium' }}</td>
+                            <td class="text-success font-weight-bold">₦{{ dep.amount | number:'1.2-2' }}</td>
+                            <td><span class="badge badge-success">Successful</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <ng-template #noDeposits>
+                      <p class="text-muted mb-0">No deposits recorded for this property transaction.</p>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- All Deposits Tab -->
+    <div *ngIf="activeTab === 'deposits'">
+      <div class="card shadow-sm border-0 premium-card p-4" *ngIf="deposits.length > 0; else noDepositsTab">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Transaction Reference</th>
+                <th>Deposit Amount</th>
+                <th>Destination Account</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dep of deposits">
+                <td>{{ dep.created_at | date:'medium' }}</td>
+                <td class="text-monospace small">{{ dep.references?.txRef || 'N/A' }}</td>
+                <td class="text-success font-weight-bold">₦{{ dep.amount | number:'1.2-2' }}</td>
+                <td>
+                  <span *ngIf="dep.savingAccount" class="badge badge-info px-2 py-1">Savings Wallet</span>
+                  <span *ngIf="dep.transaction" class="badge badge-primary px-2 py-1">Property Purchase</span>
+                </td>
+                <td><span class="badge badge-success px-2 py-1">Success</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fallbacks -->
+  <ng-template #noTransactions>
+    <div class="card shadow-sm border-0 premium-card text-center p-5">
+      <i class="fa fa-receipt fa-4x text-muted mb-3"></i>
+      <h4>No payments found</h4>
+      <p class="text-muted">You haven't initiated any property transactions or payments yet.</p>
+      <a routerLink="/properties" class="btn btn-primary mt-3 px-4">Browse Properties</a>
+    </div>
+  </ng-template>
+
+  <ng-template #noDepositsTab>
+    <div class="card shadow-sm border-0 premium-card text-center p-5">
+      <i class="fa fa-piggy-bank fa-4x text-muted mb-3"></i>
+      <h4>No deposits found</h4>
+      <p class="text-muted">No individual savings or property deposits were found on your account.</p>
+    </div>
+  </ng-template>
+</div>

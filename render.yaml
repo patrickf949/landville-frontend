@@ -1,0 +1,31 @@
+# Render Blueprint — free static hosting for the LandVille frontend.
+# Deploy: push to GitHub → Render → "New +" → "Blueprint" → pick this repo.
+# Static sites on Render's free tier don't spin down (unlike free web
+# services), so this is the cheapest, fastest option for the SPA.
+#
+# The app is built with Angular SSR, but here we publish the client (browser)
+# bundle and let the browser render — no Node server needed. Want true SSR?
+# See DEPLOYMENT.md for the alternative Node web-service setup.
+#
+# Before deploying, set your backend URL in src/environments/environment.prod.ts.
+
+services:
+  - type: web
+    name: landville-frontend
+    runtime: static
+    buildCommand: "npm ci && npm run build"
+    staticPublishPath: ./dist/landville-frontend/browser
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: API_URL
+        sync: false
+    routes:
+      # SPA fallback: every path serves index.html so client-side routing works.
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY

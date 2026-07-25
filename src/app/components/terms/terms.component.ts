@@ -5,6 +5,7 @@ import { Term } from 'src/app/models/Term';
 import {Title} from '@angular/platform-browser';
 
 @Component({
+  standalone: false,
   selector: 'app-terms',
   templateUrl: './terms.component.html',
   styleUrls: ['./terms.component.scss']

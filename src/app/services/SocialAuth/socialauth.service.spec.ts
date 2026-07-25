@@ -17,8 +17,8 @@ describe('Test for Loginservice', () => {
       providers: [LoginService]
     });
     // inject service
-    service = TestBed.get(LoginService);
-    httpMock = TestBed.get(HttpTestingController);
+    service = TestBed.inject(LoginService);
+    httpMock = TestBed.inject(HttpTestingController);
     googleUrl = APPCONFIG.base_url + '/auth/google/';
     facebookUrl = APPCONFIG.base_url + '/auth/facebook/';
   });

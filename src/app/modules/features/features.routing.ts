@@ -1,27 +1,62 @@
 import { Routes } from '@angular/router';
-import { CompanyComponent } from 'src/app/modules/features/components/company/company.component';
 import { ProfileComponent } from 'src/app/modules/features/components/profile/profile.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
-import { DepositsComponent } from 'src/app/modules/features/components/deposits/deposits.component';
-import { ClientsComponent } from 'src/app/modules/features/components/clients/clients.component';
-import { PinPaymentComponent } from 'src/app/modules/features/components/payment/pin-payment/pin-payment.component';
-import { PinValidateComponent } from 'src/app/modules/features/components/payment/pin-validate/pin-validate.component';
-import { TokenizedCardComponent } from 'src/app/modules/features/components/payment/tokenized-card/tokenized-card.component';
-import {
-  InternationalPaymentComponent
-} from 'src/app/modules/features/components/payment/international-payment/international-payment.component';
-import {
-  InternationalPaymentStatusComponent
-} from 'src/app/modules/features/components/payment/international-payment-status/international-payment-status.component';
 import { ReviewComponent } from 'src/app/modules/features/components/client-review/review.component';
+import { ListingFormComponent } from 'src/app/modules/features/components/listing-form/listing-form.component';
+import { MyListingsComponent } from 'src/app/modules/features/components/my-listings/my-listings.component';
+import { InboxComponent } from 'src/app/modules/features/components/chat/inbox/inbox.component';
+import { ThreadComponent } from 'src/app/modules/features/components/chat/thread/thread.component';
+import { CheckoutComponent } from 'src/app/modules/features/components/payment/checkout/checkout.component';
+import { TransactionHistoryComponent } from 'src/app/modules/features/components/payment/transaction-history/transaction-history.component';
+import { SavedPropertiesComponent } from 'src/app/modules/features/components/saved-properties/saved-properties.component';
 
 export const CommonLayoutRoutes: Routes = [
   {
-    path: 'create-company',
-    component: CompanyComponent,
-    data: {
-      title: 'Create Partner Company'
-    },
+    path: 'create-listing',
+    component: ListingFormComponent,
+    data: { title: 'Create a listing' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'edit-listing/:slug',
+    component: ListingFormComponent,
+    data: { title: 'Edit a listing' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'my-listings',
+    component: MyListingsComponent,
+    data: { title: 'My listings' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'messages',
+    component: InboxComponent,
+    data: { title: 'Messages' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'messages/:id',
+    component: ThreadComponent,
+    data: { title: 'Conversation' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'checkout/:slug',
+    component: CheckoutComponent,
+    data: { title: 'Checkout' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'transactions',
+    component: TransactionHistoryComponent,
+    data: { title: 'Transaction History' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'saved-properties',
+    component: SavedPropertiesComponent,
+    data: { title: 'Saved Properties' },
     canActivate: [AuthGuard]
   },
   {
@@ -31,48 +66,6 @@ export const CommonLayoutRoutes: Routes = [
       title: 'User Profile'
     },
     canActivate: [AuthGuard],
-  },
-  {
-    path: 'user/deposits',
-    component: DepositsComponent,
-    data: {
-      title: 'My Deposits',
-      tags: [],
-    },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'clients',
-    component: ClientsComponent,
-    data: {
-      title: 'Client companies',
-      tags: [],
-    },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'payment/pin',
-    component: PinPaymentComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'validate-pin/:flwRef/:purpose',
-    component: PinValidateComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'payment/saved-card',
-    component: TokenizedCardComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'payment/international',
-    component: InternationalPaymentComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'payment/international/status',
-    component: InternationalPaymentStatusComponent,
   },
   {
     path: 'client/:clientId/review',

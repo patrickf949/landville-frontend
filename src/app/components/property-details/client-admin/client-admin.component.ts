@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-client-admin',
   templateUrl: './client-admin.component.html',
   styleUrls: ['./client-admin.component.scss']

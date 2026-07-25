@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-input-errors',
   templateUrl: './input-errors.component.html',
   styleUrls: ['./input-errors.component.scss']

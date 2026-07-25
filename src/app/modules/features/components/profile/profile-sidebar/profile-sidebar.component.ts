@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -9,6 +9,7 @@ import { removeSubscription } from 'src/app/helpers/unsubscribe';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
+  standalone: false,
   selector: 'app-profile-sidebar',
   templateUrl: './profile-sidebar.component.html',
   styleUrls: ['./profile-sidebar.component.scss']
@@ -27,7 +28,8 @@ export class ProfileSidebarComponent implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private toastService: ToastrService,
     private spinner: NgxSpinnerService,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -49,6 +51,10 @@ export class ProfileSidebarComponent implements OnInit, OnDestroy {
           this.addressSet = true;
         }
         this.spinner.hide();
+        this.cdr.detectChanges();
+      }, error => {
+        this.spinner.hide();
+        this.cdr.detectChanges();
       })
     );
   }
@@ -56,7 +62,7 @@ export class ProfileSidebarComponent implements OnInit, OnDestroy {
     // always store updated image in localStorage
     const storedImage = this.storage.get('profileImage', '');
     if (profileData.image) {
-      localStorage.setItem('profileImage', profileData.image);
+      this.storage.set('profileImage', profileData.image);
       return profileData.image;
     } else if (storedImage) {
       // before requesting for new random avatar, we check if the user
@@ -76,20 +82,19 @@ export class ProfileSidebarComponent implements OnInit, OnDestroy {
     Generate a random image for users with no profile image. They are reminded
     to update their profile picture every time this method is called.
      */
-    const chars =
-      '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    let randomString;
-    for (let i = 0; i < 6; i++) {
-      const rnum = Math.floor(Math.random() * chars.length);
-      randomString += chars.substring(rnum, rnum + 1);
-    }
+    const randomString = Math.random().toString(36).substring(7);
     this.toastService.info('Please remember to set your profile image');
-    return `https://avatars.dicebear.com/v2/jdenticon/${randomString}.svg`;
+    return `https://api.dicebear.com/10.x/identicon/svg?seed=${randomString}`;
   }
   updateImage(event) {
     if (event.target.files.length > 0) {
-      this.spinner.show();
       const image = event.target.files[0];
+      if (image.size > 500 * 1024) {
+        this.toastService.error('The profile picture exceeds the 500KB limit.');
+        event.target.value = '';
+        return;
+      }
+      this.spinner.show();
       const uploadData = new FormData();
       uploadData.append('image', image);
       this.subscribe.push(
@@ -99,6 +104,7 @@ export class ProfileSidebarComponent implements OnInit, OnDestroy {
             this.storage.set('profileImage', this.profileImage);
             this.spinner.hide();
             this.toastService.success('Your image was successfully updated.');
+            this.cdr.detectChanges();
           },
           error => {
             const err = error.error.errors.image;
@@ -106,6 +112,7 @@ export class ProfileSidebarComponent implements OnInit, OnDestroy {
             this.toastService.error(
               `Could not update your profile image. ${err}`
             );
+            this.cdr.detectChanges();
           }
         )
       );

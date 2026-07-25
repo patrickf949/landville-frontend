@@ -1,7 +1,7 @@
 import { mockReviewsResponse, reviewResponse } from 'src/app/helpers/tests/mocks';
 import { ClientReviewsService } from 'src/app/services/client-reviews/client-reviews.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { httpClientSpy, toastServiceSpy, reviewsSpy, resetSpies } from 'src/app/helpers/tests/spies';
 import { of, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -11,7 +11,6 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
-import { configureTestSuite } from 'ng-bullet';
 
 describe('ClientReviewsComponent', () => {
   let component: ClientReviewsComponent;
@@ -22,7 +21,7 @@ describe('ClientReviewsComponent', () => {
   beforeAll(() => resetSpies([reviewsSpy]));
   afterEach(() => resetSpies([reviewsSpy]));
 
-  configureTestSuite(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ClientReviewsComponent],
       imports: [
@@ -47,7 +46,7 @@ describe('ClientReviewsComponent', () => {
       ]
     })
       .compileComponents();
-  });
+  }));
 
 
   beforeEach(() => {
@@ -84,7 +83,41 @@ describe('ClientReviewsComponent', () => {
     );
     component.fetchReviews(url);
     expect(toastServiceSpy.error).toHaveBeenCalledWith(
-      'No reviews yet'
+      'Details: No reviews yet'
     );
   });
+
+  it('should render reviewer profile image when image exists in review', () => {
+    const images = fixture.debugElement.queryAll(By.css('.profilepic'));
+    expect(images.length).toBeGreaterThan(0);
+    expect(images[0].nativeElement.getAttribute('src')).toBe('http://res.cloudinary.com/landville/image/upload/v1567094295/yhhaucrvkdgjqiizef6n.png');
+  });
+
+  it('should render default profileImage when reviewer image is null or undefined', () => {
+    const responseWithNoImage = {
+      count: 1,
+      next: null,
+      previous: null,
+      results: [
+        {
+          id: 1,
+          created_at: '2019-08-29T07:10:20.158541Z',
+          review: 'Great service',
+          reviewer: {
+            first_name: 'John',
+            last_name: 'Doe',
+            image: null
+          }
+        }
+      ]
+    };
+    reviewsSpy.getReviews.and.returnValue(of(responseWithNoImage));
+    component.fetchReviews(1);
+    fixture.detectChanges();
+
+    const images = fixture.debugElement.queryAll(By.css('.profilepic'));
+    expect(images.length).toBe(1);
+    expect(images[0].nativeElement.getAttribute('src')).toBe('assets/img/people.png');
+  });
 });
+

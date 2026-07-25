@@ -1,137 +1,156 @@
-<div>
-  <div class="container overflow-auto ml-1">
-    <div class="col-sm-8 m-0 float-left pt-4">
-      <b style="color:grey"
-      >Page results : showing {{ properties.length }} of
-        {{ count }} results</b
-        >
-    </div>
-    <div class="view col-sm-4 m-0 ml-5 float-left">
-      <i 
-      class="fas fa-list-ul" 
-      (click)="toggleView()"
-      [ngClass]="{ 'list-active': listToggle, 'list-deactive': !listToggle }"
-      ></i>
-      <i 
-      class="fas fa-th" 
-      (click)="toggleView()"
-        [ngClass]="{ 'list-active': gridToggle, 'list-deactive': !gridToggle }"
-        ></i>
-    </div>
-  </div>
+<div class="properties-page container-fluid px-md-4 py-3">
+  <div class="row">
+    <!-- Filter sidebar -->
+    <aside class="col-lg-3 mb-3">
+      <div class="filter-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="mb-0"><i class="fa fa-sliders-h mr-1"></i>Filters</h6>
+          <button class="btn btn-sm btn-link p-0" (click)="clearFilters()">Reset</button>
+        </div>
 
-  <div *ngIf="!toggle">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="col-md-12" *ngFor="let property of properties">
-          <a [routerLink]="['/properties', property.slug]" routerLinkActive="active" class="custom-card" (click)="setDocTitle(property.title)">
-            <div class="card bg-light listview">
+        <div class="form-group">
+          <select class="form-control form-control-sm" [(ngModel)]="filters.listing_type" (change)="search()">
+            <option *ngFor="let t of listingTypes" [value]="t.value">{{ t.label }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select class="form-control form-control-sm" [(ngModel)]="filters.property_type" (change)="search()">
+            <option *ngFor="let t of propertyTypes" [value]="t.value">{{ t.label }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input class="form-control form-control-sm" placeholder="City"
+                 [(ngModel)]="filters.city" (change)="search()" />
+        </div>
+        <div class="form-group d-flex" style="gap:6px">
+          <input type="number" class="form-control form-control-sm" placeholder="Min ₦"
+                 [(ngModel)]="filters.price_min" (change)="search()" />
+          <input type="number" class="form-control form-control-sm" placeholder="Max ₦"
+                 [(ngModel)]="filters.price_max" (change)="search()" />
+        </div>
+        <div class="form-group">
+          <select class="form-control form-control-sm" [(ngModel)]="filters.distance_to_main_road" (change)="search()">
+            <option *ngFor="let d of roadDistances" [value]="d.value">{{ d.label }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select class="form-control form-control-sm" [(ngModel)]="filters.distance_to_city" (change)="search()">
+            <option *ngFor="let d of cityDistances" [value]="d.value">{{ d.label }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select class="form-control form-control-sm" [(ngModel)]="filters.noise_level" (change)="search()">
+            <option *ngFor="let n of noiseLevels" [value]="n.value">{{ n.label }}</option>
+          </select>
+        </div>
+
+        <label class="filter-label">Amenities</label>
+        <div class="chip-row mb-3">
+          <button type="button" class="chip" *ngFor="let a of amenities"
+                  [class.active]="selectedAmenities.has(a.id)"
+                  (click)="toggleChip(selectedAmenities, a.id)">
+            <i class="fa {{ a.icon }} mr-1"></i>{{ a.name }}
+          </button>
+        </div>
+
+        <label class="filter-label">Nearby</label>
+        <div class="chip-row">
+          <button type="button" class="chip" *ngFor="let f of nearbyFeatures"
+                  [class.active]="selectedNearby.has(f.id)"
+                  (click)="toggleChip(selectedNearby, f.id)">
+            <i class="fa {{ f.icon }} mr-1"></i>{{ f.name }}
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <main class="col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+        <b class="results-count">{{ count }} propert{{ count === 1 ? 'y' : 'ies' }} found</b>
+        <div class="view-toggle">
+          <button class="btn btn-sm" [class.active]="view === 'grid'" (click)="view = 'grid'" title="Grid view">
+            <i class="fas fa-th"></i>
+          </button>
+          <button class="btn btn-sm" [class.active]="view === 'list'" (click)="view = 'list'" title="List view">
+            <i class="fas fa-list-ul"></i>
+          </button>
+          <button class="btn btn-sm" [class.active]="view === 'map'" (click)="view = 'map'" title="Map view">
+            <i class="fas fa-map-marked-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading spinner -->
+      <div *ngIf="loading" class="text-center py-5 my-5">
+        <div class="spinner-border text-warning" role="status" style="width: 3.5rem; height: 3.5rem;">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <h5 class="mt-3 text-muted">Finding properties...</h5>
+      </div>
+
+      <div *ngIf="!loading && !properties.length" class="empty-state text-center py-5">
+        <i class="fa fa-search fa-3x mb-3"></i>
+        <h5>No properties match your filters</h5>
+        <p class="text-muted">Try removing a filter or two, or check back later.</p>
+        <button class="btn btn-outline-primary" (click)="clearFilters()">Clear all filters</button>
+      </div>
+
+      <!-- Grid -->
+      <div *ngIf="view === 'grid' && !loading" class="row">
+        <div class="col-md-4 mb-3" *ngFor="let property of properties">
+          <a [routerLink]="['/properties', property.slug]" class="custom-card" (click)="setDocTitle(property.title)">
+            <app-card
+              [imageMain]="property.image_main"
+              [title]="property.title"
+              [street]="property.address.Street"
+              [city]="property.address.City"
+              [price]="property.price"
+            ></app-card>
+          </a>
+        </div>
+      </div>
+
+      <!-- List -->
+      <div *ngIf="view === 'list' && !loading">
+        <div *ngFor="let property of properties">
+          <a [routerLink]="['/properties', property.slug]" class="custom-card" (click)="setDocTitle(property.title)">
+            <div class="card bg-light listview mb-2">
               <div class="row no-gutters">
                 <div class="col-auto">
                   <img [src]="property.image_main" class="img-fluid2" alt="" />
                 </div>
                 <div class="col">
                   <div class="card-block px-2">
-                    <h4>
-                      <b
-                        class="card-title">
-                        {{ property.title }}</b
-                        >
-                    </h4>
+                    <h4><b class="card-title">{{ property.title }}</b></h4>
                     <p class="card-text list-card">
-                      <img 
-                        alt="" 
-                        src="assets/img/marker.svg" 
-                        [style.width.px]="10" 
-                        />
+                      <i class="fa fa-map-marker-alt mr-1"></i>
                       {{ property.address.Street }}, {{ property.address.City }}
                     </p>
-                    <div class="priceL">
-                      <b>&#8358; {{ property.price }}</b>
-                    </div>
+                    <div class="priceL"><b>&#8358; {{ property.price | number }}</b></div>
                   </div>
                 </div>
               </div>
             </div>
           </a>
         </div>
-        <div class="container">
-          <div class="page-buttons">
-            <button 
-            class="btn prev" 
-            (click)="fetchPrevious()" 
-            [disabled]="disabledPrevious"
-            >
-              <img alt="" src="assets/img/arrowL.svg" [style.width.px]="10" />
-              Previous
-            </button>
-            <button 
-            class="btn next" 
-            (click)="fetchNext()" 
-            [disabled]="disabledNext"
-            >
-              Next
-              <img alt="" src="assets/img/arrowR.svg" [style.width.px]="7" />
-            </button>
-          </div>
-        </div>
       </div>
-      <div class="col-md-4">
-        <img 
-          alt="Card image" 
-          class="card-img" 
-          src="assets/img/designs/Design-min.jpg" 
-          />
+
+      <!-- Map -->
+      <div *ngIf="view === 'map' && !loading" class="map-view">
+        <app-map mode="results" [markers]="markers"></app-map>
       </div>
-    </div>
+
+      <div class="page-buttons mt-3" *ngIf="view !== 'map' && properties.length && !loading">
+        <button class="btn prev" (click)="fetchPrevious()" [disabled]="disabledPrevious">
+          <i class="fa fa-chevron-left mr-1"></i>Previous
+        </button>
+        <button class="btn next" (click)="fetchNext()" [disabled]="disabledNext">
+          Next<i class="fa fa-chevron-right ml-1"></i>
+        </button>
+      </div>
+    </main>
   </div>
 
-  <div *ngIf="toggle">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="col-md-4" *ngFor="let property of properties">
-            <a [routerLink]="['/properties', property.slug]" routerLinkActive="active" class="custom-card" (click)="setDocTitle(property.title)">
-              <app-card 
-              [imageMain]="property.image_main" 
-              [title]="property.title" 
-              [street]="property.address.Street"
-              [city]="property.address.City" 
-              [price]="property.price"
-              ></app-card>
-            </a>
-          </div>
-        </div>
-        <div class="container">
-          <div class="page-buttons">
-            <button 
-            class="btn prev" 
-            (click)="fetchPrevious()" 
-            [disabled]="disabledPrevious"
-            >
-              <img alt="" src="assets/img/arrowL.svg" [style.width.px]="10" />
-              Previous
-            </button>
-            <button 
-            class="btn next" 
-            (click)="fetchNext()" 
-            [disabled]="disabledNext"
-            >
-              Next
-              <img alt="" src="assets/img/arrowR.svg" [style.width.px]="7" />
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <img 
-        alt="Card image" 
-        class="card-img" 
-        src="assets/img/designs/Design-min.jpg" 
-        />
-      </div>
-    </div>
-  </div>
-
-  <ngx-spinner></ngx-spinner>
+  <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 </div>

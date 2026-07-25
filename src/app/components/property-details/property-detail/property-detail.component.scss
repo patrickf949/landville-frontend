@@ -1,80 +1,128 @@
-.img-fluid{
-    max-width: 100%; 
-    height: auto;
+.property-detail-container {
+  .property-title {
+    font-size: 1.85rem;
+    color: #201541;
+    letter-spacing: -0.02rem;
+  }
 
-}
-.card-header {
-    border: hidden;
-    background-color: #e9ecef;
-    color: #431c53;
-    
-}
-.btn-primary {
-    font-size: small;
-    color: #fff !important;
-    background-color: #ee9619 !important;
-    border-radius: 45px;
-    border-color:#ee9619 !important;
-}
-.buttons {
-    color: aliceblue;
-    background-color:#ee9619; 
-    float: right;
-    border-style: hidden;
-    padding: inherit;
-    outline:none;
-}
-.card-body {
-    background-color: rgba(109, 105, 105, 0.03);;
-}
-.price {
-    color:#ee9619;
-}
-@media (max-width: 768px){
-    span{
-        flex-basis: unset;
-    }
-    img.img-fluid{
-        height: 300px;
-    }
-}
-@media (max-width: 450px){
+  .property-location {
+    font-size: 0.95rem;
+    color: #667085;
+    margin-top: 0.25rem;
+  }
 
-    .img-fluid{
-        height: 350px;
-    }
-}
+  .property-price {
+    font-size: 1.85rem;
+    color: #ee9619;
+    letter-spacing: -0.01rem;
+  }
 
-@media (max-width:641px) {
-    .img-fluid{
-    height:100vh;
+  .price-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+  }
+
+  .carousel-wrapper {
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(30, 61, 150, 0.12);
+  }
+
+  .img-cover {
+    height: 480px;
+    object-fit: cover;
     width: 100%;
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 44px;
+    height: 44px;
+    background: rgba(32, 21, 65, 0.85);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 1rem;
+    opacity: 0.75;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+      background: #ee9619;
     }
 
-  
-  .carousel{
-      width: 100%;
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .rooms-container {
+    background: #f7f9ff;
+    border-radius: 14px;
+    border: 1.5px solid #dbe2f5;
+
+    .room-spec {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      color: #33415c;
+
+      i {
+        font-size: 1.15rem;
+        color: #1e3d96;
+      }
+
+      strong {
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+    }
   }
 }
-.carousel-control-next-icon, .carousel-control-prev-icon {
-    margin-right: 35px;
+
+/* --- Responsiveness --- */
+@media (max-width: 991.98px) {
+  .property-detail-container {
+    .img-cover {
+      height: 360px;
+    }
+  }
 }
-img.img-fluid {
-    height:450px;
-    width: inherit;
-}
-.card {
-    border: hidden;
-}
-.card-header {
-    border: hidden;
-    background-color: #e9ecef;
-    color: #431c53;
-    
-}
-.card-body {
-    background-color: rgba(109, 105, 105, 0.03);;
-}
-.price {
-    color:#ee9619;
+
+@media (max-width: 575.98px) {
+  .property-detail-container {
+    .property-title {
+      font-size: 1.4rem;
+    }
+
+    .property-price {
+      font-size: 1.4rem;
+    }
+
+    .img-cover {
+      height: 250px;
+    }
+
+    .rooms-container {
+      padding: 0.75rem !important;
+
+      .room-spec {
+        font-size: 0.85rem;
+
+        i {
+          font-size: 1rem;
+        }
+
+        strong {
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
 }

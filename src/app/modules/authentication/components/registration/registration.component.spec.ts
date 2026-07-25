@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistrationComponent } from 'src/app/modules/authentication/components/registration/registration.component';
 import {
   RegisterFormComponent
@@ -29,7 +29,7 @@ describe('RegistrationComponent', () => {
 
   beforeAll(() => resetSpies([registerServiceSpy]));
   afterEach(() => resetSpies([registerServiceSpy]));
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         RegistrationComponent,
@@ -117,7 +117,7 @@ describe('RegistrationComponent', () => {
     registerServiceSpy.registerUser.and.returnValue(throwError(errorMessage));
     component.registerUser(User);
     expect(toastServiceSpy.error).toHaveBeenCalledWith(
-      errorMessage.error.errors.email[0]
+      `Email: ${errorMessage.error.errors.email[0]}`
     );
   });
 });

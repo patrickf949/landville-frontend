@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed , waitForAsync} from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -9,13 +9,12 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { localStorageSpy, toastServiceSpy } from 'src/app/helpers/tests/spies';
 import { LoginFormComponent } from 'src/app/modules/authentication/components/login/login-form/login-form.component';
 import { LoginComponent } from 'src/app/modules/authentication/components/login/login.component';
-import {configureTestSuite} from 'ng-bullet';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
-  configureTestSuite(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
@@ -40,7 +39,7 @@ describe('LoginComponent', () => {
         },
       ]
     }).compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);

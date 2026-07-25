@@ -11,31 +11,35 @@ describe('PasswordResetService', () => {
     TestBed.configureTestingModule({
     imports: [HttpClientTestingModule ],
   });
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should create PasswordResetService', () => {
-    const service: PasswordResetService = TestBed.get(PasswordResetService);
+    const service: PasswordResetService = TestBed.inject(PasswordResetService);
     expect(service).toBeTruthy();
   });
 
   it('should trigger a service with valid email address', () => {
-    const service: PasswordResetService = TestBed.get(PasswordResetService);
+    const service: PasswordResetService = TestBed.inject(PasswordResetService);
     const mockData = {
       email: 'joel@andela.com'
     };
     service.getResetLink(mockData).subscribe();
     const req = httpMock.expectOne(url);
+    expect(req.request.url).toEqual(url);
     req.flush(mockData);
     });
 
   it('should throw an error when invalid email is provided', () => {
-      const service: PasswordResetService = TestBed.get(PasswordResetService);
-      const mockData = {
-        email: 'joelandela.com'
-      };
-      service.getResetLink(mockData).subscribe();
-      const req = httpMock.expectOne(url);
-      req.flush(mockData);
-      });
+    const service: PasswordResetService = TestBed.inject(PasswordResetService);
+    const mockData = {
+      email: 'joelandela.com'
+    };
+    service.getResetLink(mockData).subscribe({
+      error: (err) => expect(err).toBeTruthy()
+    });
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('POST');
+    req.flush('Invalid email', { status: 400, statusText: 'Bad Request' });
+  });
 });

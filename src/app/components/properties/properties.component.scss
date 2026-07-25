@@ -112,9 +112,7 @@ a.custom-card:hover {
   padding: 0;
 }
 
-.row {
-  margin-left: 0px;
-}
+
 
 @media screen and (max-width: 1024px) {
   .view {
@@ -149,5 +147,99 @@ a.custom-card:hover {
 
   .priceL {
     margin-top: -5.3125rem;
+  }
+}
+
+/* --- LandVille modern search layout --- */
+.properties-page {
+  .filter-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(30, 61, 150, 0.08);
+    padding: 1.25rem;
+    position: sticky;
+    top: 12px;
+
+    h6 {
+      font-weight: 700;
+      color: #201541;
+      font-size: 1.05rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-control, select, input {
+      height: 2.3rem !important;
+      border-radius: 8px;
+      border: 1.5px solid #dbe2f5;
+      font-size: 0.88rem;
+      color: #33415c;
+      padding: 0.375rem 0.75rem;
+      transition: all 0.2s ease;
+
+      &:focus {
+        border-color: #ee9619;
+        box-shadow: 0 0 0 0.15rem rgba(238, 150, 25, 0.15);
+      }
+    }
+
+    .filter-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #98a2b3;
+      margin: 0.8rem 0 0.4rem 0;
+      display: block;
+      letter-spacing: 0.05rem;
+    }
+  }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+  .chip {
+    border: 1.5px solid #dbe2f5;
+    background: #f7f9ff;
+    color: #33415c;
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.72rem;
+    transition: all 0.15s ease;
+
+    &.active { background: #1e3d96; border-color: #1e3d96; color: #fff; }
+    &:hover:not(.active) { border-color: #1e3d96; }
+  }
+
+  .results-count { color: #667085; }
+
+  .view-toggle .btn {
+    color: #98a2b3;
+    &.active { color: #1e3d96; }
+  }
+
+  .empty-state i { color: #dbe2f5; }
+
+  .map-view { height: 65vh; }
+}
+
+/* --- LandVille search: mobile --- */
+@media (max-width: 991.98px) {
+  .properties-page {
+    .filter-card {
+      position: static;
+      top: auto;
+      margin-bottom: 1rem;
+    }
+
+    .map-view { height: 55vh; }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .properties-page {
+    .filter-card { padding: 0.85rem; }
+    .map-view { height: 48vh; }
+    .view-toggle { flex-wrap: wrap; }
   }
 }

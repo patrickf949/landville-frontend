@@ -1,0 +1,51 @@
+<div class="container py-4 thread-page">
+  <div class="thread-card">
+    <div class="thread-head">
+      <a routerLink="/messages" class="back"><i class="fa fa-arrow-left"></i></a>
+      <div class="flex-grow-1">
+        <strong>Conversation</strong>
+        <small class="d-block" [class.text-success]="live" [class.text-muted]="!live">
+          <i class="fa fa-circle mr-1"></i>{{ live ? 'live' : 'offline — messages still delivered' }}
+        </small>
+      </div>
+      <div class="dropdown">
+        <button class="btn btn-sm btn-light" (click)="report()" title="Report">
+          <i class="fa fa-flag"></i>
+        </button>
+        <button class="btn btn-sm btn-light ml-1" (click)="block()" title="Block">
+          <i class="fa fa-ban"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="messages" #scrollArea>
+      <div *ngIf="loading" class="text-center py-5">
+        <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+      </div>
+      <div *ngIf="!loading && !messages.length" class="text-center text-muted py-5">
+        Say hello — ask about the property, arrange a visit, agree on a price.
+      </div>
+      <div class="bubble-row" *ngFor="let message of messages"
+           [class.mine]="isMine(message)">
+        <div class="bubble">
+          <div class="body">{{ message.body }}</div>
+          <div class="stamp">
+            {{ message.created_at | date:'MMM d, HH:mm' }}
+            <i *ngIf="isMine(message)" class="fa"
+               [class.fa-check]="!message.read_at"
+               [class.fa-check-double]="message.read_at"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form class="composer" (ngSubmit)="send()">
+      <input class="form-control" name="draft" [(ngModel)]="draft"
+             maxlength="2000" autocomplete="off"
+             placeholder="Write a message… (text only)" />
+      <button class="btn btn-primary" type="submit" [disabled]="!draft.trim()">
+        <i class="fa fa-paper-plane"></i>
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -38,7 +38,7 @@ describe('LoginFormComponent', () => {
 
   beforeAll(() => resetSpies([loginServiceSpy]));
   afterEach(() => resetSpies([loginServiceSpy]));
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
@@ -83,7 +83,7 @@ describe('LoginFormComponent', () => {
     loginServiceSpy.login.and.returnValue(throwError(loginError));
     component.onLogin(loginData);
     expect(toastServiceSpy.error).toHaveBeenCalledWith(
-      'Invalid email and password combination'
+      'Invalid: invalid email and password combination'
     );
   });
   it('should call login method', () => {

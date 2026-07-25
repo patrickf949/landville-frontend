@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { LoginService } from 'src/app/services/login/login.service';
@@ -6,37 +6,43 @@ import { ProfileService } from 'src/app/services/profile/profile.service';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   // Properties
-  authenticated: boolean;
   firstName: string;
   lastName: string;
   profileImage: string;
   subscription = new Subscription();
 
+  get authenticated(): boolean {
+    const token = this.localStorageService.get('token', false);
+    if (token) {
+      if (!this.firstName) {
+        this.profileService.pushProfile();
+      }
+      return true;
+    }
+    return false;
+  }
 
   constructor(
     private profileService: ProfileService,
     private localStorageService: LocalStorageService,
     private logoutService: LoginService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
-    this.authenticated = false;
     this.firstName = '';
     this.lastName = '';
     this.profileImage = 'assets/img/people.png';
-
-    // Check if user is authenticated
-
   }
 
   ngOnInit() {
     this.profileDetails();
-    this.setIsAuthenticated();
   }
 
   profileDetails() {
@@ -48,6 +54,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
         this.firstName = profileData.user.first_name;
         this.lastName = profileData.user.last_name;
+        this.cdr.detectChanges();
       })
     );
   }
@@ -63,17 +70,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
       ));
   }
-  setIsAuthenticated() {
-    const token = this.localStorageService.get('token', false);
-    if (token) {
-      this.authenticated = true;
-    }
-  }
 
   clearStorage() {
     this.localStorageService.clear();
+    this.firstName = '';
+    this.lastName = '';
+    this.profileImage = 'assets/img/people.png';
+    this.cdr.detectChanges();
     this.router.navigate(['/home']);
-    this.authenticated = false;
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();

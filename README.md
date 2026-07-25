@@ -1,4 +1,4 @@
-# LandvilleFrontend [![CircleCI](https://circleci.com/gh/landvilleng/landville-frontend.svg?style=svg)](https://circleci.com/gh/landvilleng/landville-frontend) [![Coverage Status](https://coveralls.io/repos/github/landvilleng/landville-frontend/badge.svg)](https://coveralls.io/github/landvilleng/landville-frontend)  <a href="https://codeclimate.com/github/landvilleng/landville-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/63814c9811ef8dde1aeb/maintainability" /></a>
+# LandVilleFrontend [![Coverage Status](https://coveralls.io/repos/github/patrickf949/landville-frontend/badge.svg?branch=develop)](https://coveralls.io/github/patrickf949/landville-frontend?branch=develop)  <a href="https://codeclimate.com/github/LandVilleng/LandVille-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/63814c9811ef8dde1aeb/maintainability" /></a>
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.3.
 
@@ -8,7 +8,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Production server
 
-Navigate to `https://landville-frontend.herokuapp.com/` and you'll be served with this application's frontend interface.
+Navigate to `https://LandVille.vercel.app/` and you'll be served with this application's frontend interface.
 
 ## Code scaffolding
 

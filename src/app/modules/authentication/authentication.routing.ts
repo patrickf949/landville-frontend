@@ -12,7 +12,8 @@ export const AuthLayoutRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    data: { title: 'LandVille | Make it yours Today' }
+    data: { title: 'LandVille | Make it yours Today' },
+    canActivate: [NoAuthGuard]
   },
   {
     path: 'register',
@@ -33,11 +34,12 @@ export const AuthLayoutRoutes: Routes = [
             'Create an account so you can can get access to a wide range of property investment options'
         },
       ]
-    }
+    },
+    canActivate: [NoAuthGuard]
   },
   {
     path: 'reset-link', data: { title: 'Reset your Password', tags: [] },
-    component: PasswordResetComponent, canActivate: [NoAuthGuard]
+    component: PasswordResetComponent
   },
   {
     path: 'auth/password-reset', data: {

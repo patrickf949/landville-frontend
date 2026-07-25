@@ -15,7 +15,7 @@ describe('NoAuthGuard', () => {
       imports: [RouterTestingModule],
       providers: [NoAuthGuard,
         LocalStorageService,
-        { provide: { AuthService, useValue: MockAuthService } },
+        { provide: AuthService, useValue: MockAuthService },
       ]
     });
     MockAuthService = jasmine.createSpyObj(['isLoggedIn']);

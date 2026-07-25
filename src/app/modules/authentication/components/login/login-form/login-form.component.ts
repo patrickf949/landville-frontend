@@ -6,7 +6,12 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginData } from 'src/app/models';
 import { LoginService } from 'src/app/services/login/login.service';
 
+import { extractErrorMessage } from 'src/app/helpers/error-handler';
+
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+
 @Component({
+  standalone: false,
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss']
@@ -28,7 +33,8 @@ export class LoginFormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private toastrService: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private localStorageService: LocalStorageService
   ) {
   }
 
@@ -50,12 +56,13 @@ export class LoginFormComponent implements OnInit {
       this.spinner.hide();
       this.toastrService.success(response.data.message);
       this.notification = 'Login was succesful';
-      localStorage.setItem('token', response.data.user.token);
-      const to = this.route.snapshot.queryParams ? this.route.snapshot.queryParams.next : 'home';
-      this.router.navigate([`${to}`]);
+      this.localStorageService.set('token', response.data.user.token);
+      const to = this.route.snapshot.queryParams['next'] || 'home';
+      this.router.navigate([`/${to}`.replace('//', '/')]);
     }, error => {
       this.spinner.hide();
-      this.toastrService.error('Invalid email and password combination');
+      const msg = extractErrorMessage(error);
+      this.toastrService.error(msg === 'An unexpected error occurred.' ? 'Invalid email and password combination' : msg);
       this.setErrorTimeout();
     });
 

@@ -1,4 +1,4 @@
-@import 'src/assets/scss/abstract/mixins';
-@import 'base';
-@import 'src/assets/scss/abstract/variables';
-@import 'card';
+@use 'src/assets/scss/abstract/mixins' as *;
+@use 'base' as *;
+@use 'src/assets/scss/abstract/variables' as *;
+@use 'card' as *;

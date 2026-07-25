@@ -13,6 +13,7 @@ import { RegistersuccessComponent } from 'src/app/modules/authentication/compone
 import { HomeComponent } from 'src/app/components/home/home.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { ClientReviewsComponent } from 'src/app/components/client-reviews/client-reviews.component';
+import { PublicProfileComponent } from 'src/app/components/public-profile/public-profile.component';
 
 const routes: Routes = [
   {
@@ -26,10 +27,9 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: './modules/authentication/authentication.module#AuthenticationModule'
+        loadChildren: () => import('./modules/authentication/authentication.module').then(m => m.AuthenticationModule)
       }
-    ],
-    canActivate: [NoAuthGuard]
+    ]
   },
   {
     path: 'terms-and-conditions',
@@ -52,7 +52,7 @@ const routes: Routes = [
     component: FeaturesComponent,
     children: [{
       path: '',
-      loadChildren: './modules/features/features.module#FeaturesModule',
+      loadChildren: () => import('./modules/features/features.module').then(m => m.FeaturesModule),
     }],
     canActivate: [AuthGuard],
   },
@@ -75,7 +75,7 @@ const routes: Routes = [
         },
         {
           name: 'og:image',
-          content: 'assets/img/ICON/Logo.png'
+          content: 'assets/img/ICON/Logo Icon.png'
         },
         // Twitter
         {
@@ -84,7 +84,7 @@ const routes: Routes = [
         },
         {
           name: 'twitter:image',
-          content: 'assets/img/ICON/Logo.png',
+          content: 'assets/img/ICON/Logo Icon.png',
         },
         {
           name: 'twitter:title',
@@ -108,10 +108,10 @@ const routes: Routes = [
         },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'LandVille' },
-        { name: 'og:image', content: 'assets/img/ICON/Logo.png' },
+        { name: 'og:image', content: 'assets/img/ICON/Logo Icon.png' },
         // Twitter
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:image', content: 'assets/img/ICON/Logo.png' },
+        { name: 'twitter:image', content: 'assets/img/ICON/Logo Icon.png' },
         { name: 'twitter:title', content: 'All Properties | Acquire your dream property with ease today' },
         { name: 'twitter:description', content: 'Browse a wide range of the best property across Nigeria' },
       ]
@@ -131,13 +131,23 @@ const routes: Routes = [
         { property: 'og:site_name', content: 'LandVille' },
         // Twitter
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:image', content: 'assets/img/ICON/Logo.png' },
+        { name: 'twitter:image', content: 'assets/img/ICON/Logo Icon.png' },
         { name: 'twitter:title', content: 'All Properties | Acquire your dream property with ease today' },
         { name: 'twitter:description', content: 'Browse a wide range of the best property across Nigeria' },
       ]
     },
   },
   { path: 'no-properties', component: NoPropertiesComponent },
+  {
+    path: 'user/:id', component: PublicProfileComponent, data: {
+      title: 'Member profile | LandVille',
+      tags: [
+        { property: 'og:title', content: 'Member profile | LandVille' },
+        { property: 'og:description', content: 'See this member\'s available listings on LandVille' },
+        { property: 'og:site_name', content: 'LandVille' },
+      ]
+    }
+  },
   { path: 'auth/:clientId/reviews', component: ClientReviewsComponent },
   {
     path: '**',

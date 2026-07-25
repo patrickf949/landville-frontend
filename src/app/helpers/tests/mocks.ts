@@ -1,5 +1,5 @@
 import { UserProfileUpdatedResponse } from 'src/app/models/Profile';
-import {SocialUser} from 'angularx-social-login';
+import {SocialUser} from '@abacritt/angularx-social-login';
 
 export const mockUpdatedProfileResponse: UserProfileUpdatedResponse = {
   data: {
@@ -270,7 +270,8 @@ export const userData: SocialUser = {
   idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg0ZjI5NGM0NTE2MDA4OGQwNzlmZWU2ODEzOGY1MjEzM2QzZTIyOGMiLCJ0eXAiOiJKV1QifQ.',
   lastName: 'Onkundi',
   provider: 'GOOGLE',
-  authorizationCode: 'sjsksj'
+  authorizationCode: 'sjsksj',
+  response: null
 };
 
 export const clientsMockresponse = {

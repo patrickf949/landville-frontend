@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ProfileSidebarComponent } from 'src/app/modules/features/components/profile/profile-sidebar/profile-sidebar.component';
@@ -19,7 +19,7 @@ import {
 } from 'src/app/helpers/tests/mocks';
 import { By } from '@angular/platform-browser';
 import { NgForm } from '@angular/forms';
-import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { RoleTransformPipe } from 'src/app/pipes/role.pipe';
 
 describe('ProfileSidebarComponent', () => {
@@ -34,7 +34,7 @@ describe('ProfileSidebarComponent', () => {
     resetSpies([profileServiceSpy, toastServiceSpy]);
   });
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, NgxSpinnerModule],
       declarations: [ProfileSidebarComponent, RoleTransformPipe],
@@ -58,6 +58,7 @@ describe('ProfileSidebarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProfileSidebarComponent);
     component = fixture.componentInstance;
+    profileServiceSpy.userProfile$ = of(mockProfileResponse);
     profileServiceSpy.getProfile.and.returnValue(of(mockProfileResponse));
     fixture.detectChanges();
   });
@@ -78,7 +79,7 @@ describe('ProfileSidebarComponent', () => {
     fixture.detectChanges();
     expect(profileServiceSpy.updateProfile).toHaveBeenCalled();
   });
-  it('should throw error if image is invalid', async(() => {
+  it('should throw error if image is invalid', waitForAsync(() => {
     const event = {
       target: {
         files: [{ name: 'aa' }]
@@ -101,16 +102,15 @@ describe('ProfileSidebarComponent', () => {
   }));
   it('should store image in localStorage if the user has an image', () => {
     component.setImage(mockProfileResponse.data.profile);
-    expect(localStorage.getItem('profileImage')).toEqual(
+    expect(localStorageSpy.set).toHaveBeenCalledWith(
+      'profileImage',
       mockProfileResponse.data.profile.image
     );
   });
   it('should first check the localStorage to get the profile image', () => {
     localStorageSpy.get.and.returnValue('https:dummyimage.com/300');
     component.setImage(mockProfileResponse.data.profile);
-    expect(localStorage.getItem('profileImage')).toBe(
-      mockProfileResponse.data.profile.image
-    );
+    expect(localStorageSpy.get).toHaveBeenCalledWith('profileImage', '');
   });
   it('should generate random image for users who have no profile image', () => {
     profileServiceSpy.getProfile.and.returnValue(
@@ -120,7 +120,29 @@ describe('ProfileSidebarComponent', () => {
     spyOn(component, 'generateRandomAvatar');
     expect(component.generateRandomAvatar).toHaveBeenCalledTimes(0);
   });
+
+  it('should hide spinner when userProfile$ throws an exception in fetchProfile', () => {
+    const spinner = TestBed.inject(NgxSpinnerService);
+    spyOn(spinner, 'hide');
+    profileServiceSpy.userProfile$ = throwError(() => new Error('profile fetch error'));
+    component.fetchProfile();
+    expect(spinner.hide).toHaveBeenCalled();
+    profileServiceSpy.userProfile$ = of(mockProfileResponse);
+  });
+
+  it('should show error toast and clear input if image size exceeds 500KB in updateImage', () => {
+    const event = {
+      target: {
+        files: [{ name: 'large_image.jpg', size: 500 * 1024 + 1 }],
+        value: 'C:\\fakepath\\large_image.jpg'
+      }
+    };
+    component.updateImage(event);
+    expect(toastServiceSpy.error).toHaveBeenCalledWith('The profile picture exceeds the 500KB limit.');
+    expect(event.target.value).toBe('');
+  });
 });
+
 
 describe('ProfileSidebarComponent', () => {
   let component: ProfileSidebarComponent;
@@ -133,7 +155,7 @@ describe('ProfileSidebarComponent', () => {
   afterEach(() => {
     resetSpies([profileServiceSpy, toastServiceSpy]);
   });
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, NgxSpinnerModule],
       declarations: [ProfileSidebarComponent, RoleTransformPipe],

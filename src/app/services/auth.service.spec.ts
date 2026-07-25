@@ -11,23 +11,22 @@ describe('AuthService', () => {
         { provide: LocalStorageService, useValue: localStorageSpy }
       ]
     });
-    service = TestBed.get(AuthService);
+    service = TestBed.inject(AuthService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
   it('should be falsy if there is no token set', () => {
-    localStorage.setItem('tokenn', 'test');
+    localStorageSpy.get.and.returnValue(null);
     expect(service.isLoggedIn()).toBeFalsy();
   });
   it('should return false if a token is not valid JWT', () => {
-    localStorage.setItem('token', 'test');
+    localStorageSpy.get.and.returnValue('test');
     expect(service.isLoggedIn()).toEqual(false);
   });
   it('should return false when the token is expired', () => {
-    localStorage.setItem(
-      'token',
+    localStorageSpy.get.and.returnValue(
       'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkFoZWJ3YTEiLCJlbWFpbCI6ImNyeWNldHJ1bHlAZ21haWwuY29tIiwiZXhwIjoxNTUxNzc2Mzk0fQ.PFimaBvSaxR_cKwLmeRMod7LHkhNTcem22IXTrrg7Ko'
     );
     expect(service.isLoggedIn()).toEqual(false);

@@ -103,6 +103,9 @@ ul.top-menu > li > a:hover .caret {
   -webkit-border-radius: 50%;
   border: .2rem solid var(--color-primary-dark);
   display: inline-block;
+  object-fit: cover;
+  width: 35px;
+  height: 35px;
 }
 
 .profile-ava img.simple {
@@ -216,4 +219,25 @@ ul.top-menu > li > a:hover .caret {
 
 .dropdown-payments:hover .dropdown-content {
   display: block;
+}
+
+.brand-name {
+  font-family: 'Airbnb Cereal App Bold', 'Airbnb Cereal App', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: #1e3d96;
+  vertical-align: middle;
+}
+.navbar-brand img {
+  vertical-align: middle;
+}
+
+.nav-cta {
+  background: #ffc421;
+  color: #1e3d96 !important;
+  border-radius: 999px;
+  font-weight: 700;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  margin: 0 0.3rem;
 }
