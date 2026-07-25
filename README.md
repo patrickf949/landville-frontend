@@ -1,4 +1,4 @@
-# LandVilleFrontend [![Coverage Status](https://coveralls.io/repos/github/patrickf949/landville-frontend/badge.svg?branch=develop)](https://coveralls.io/github/patrickf949/landville-frontend?branch=develop)  <a href="https://codeclimate.com/github/LandVilleng/LandVille-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/63814c9811ef8dde1aeb/maintainability" /></a>
+# LandVille Frontend [![Coverage Status](https://coveralls.io/repos/github/patrickf949/landville-frontend/badge.svg?branch=develop)](https://coveralls.io/github/patrickf949/landville-frontend?branch=develop)  <a href="https://codeclimate.com/github/LandVilleng/LandVille-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/63814c9811ef8dde1aeb/maintainability" /></a>
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.3.
 
@@ -8,7 +8,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Production server
 
-Navigate to `https://LandVille.vercel.app/` and you'll be served with this application's frontend interface.
+Navigate to `https://landville.vercel.app/` and you'll be served with this application's frontend interface.
 
 ## Code scaffolding
 
@@ -38,7 +38,7 @@ Run `install:clean` to execute a clean installation and starting the the applica
 
 ## Browser Support
 
-At present, we officially aim to support the last two versions of the following browsers::
+At present, we officially aim to support the last two versions of the following browsers:
 
 <img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/chrome-logo.png?raw=true" width="64" height="64"> <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/firefox-logo.png" width="64" height="64"> <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/edge-logo.png" width="64" height="64"> <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/safari-logo.png" width="64" height="64"> <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/opera-logo.png" width="64" height="64">
 
