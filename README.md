@@ -1,6 +1,6 @@
 # LandVille Frontend [![Coverage Status](https://coveralls.io/repos/github/patrickf949/landville-frontend/badge.svg?branch=develop)](https://coveralls.io/github/patrickf949/landville-frontend?branch=develop)  <a href="https://codeclimate.com/github/LandVilleng/LandVille-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/63814c9811ef8dde1aeb/maintainability" /></a>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.3.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 22.0.1.
 
 ## Development server
 
