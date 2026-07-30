@@ -1,8 +1,8 @@
 const fs = require('fs');
 
 // We grab the API_URL environment variable (or fall back to empty if not set)
-const targetPath = './src/environments/environment.prod.ts';
-const apiUrl = process.env.API_URL || 'https://landville-backend.onrender.com/api/v1';
+const targetPath = './src/environments/environment.ts';
+const apiUrl = process.env.API_URL || 'https://landville-backend-web-api.onrender.com/api/v1';
 
 const envConfigFile = `// Production config. Point these at your deployed backend before building.
 export const environment = {

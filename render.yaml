@@ -13,7 +13,7 @@ services:
   - type: web
     name: landville-frontend
     runtime: static
-    buildCommand: "npm ci && npm run build"
+    buildCommand: "npm ci && npm run build -c production"
     staticPublishPath: ./dist/landville-frontend/browser
     envVars:
       - key: NODE_VERSION
