@@ -16,7 +16,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(catchError(err => {
-      if (err.status === 401) {
+      if (err.status === 401 || err.status === 403) {
         // Clear local storage and navigate first so the UI responds immediately
         this.localStorageService.clear();
         this.router.navigate(['/login'], { queryParams: { next: this.router.url } });
