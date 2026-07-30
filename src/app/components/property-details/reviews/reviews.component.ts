@@ -3,7 +3,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ClientReviewsService } from 'src/app/services/client-reviews/client-reviews.service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../../environments/environment';
 
 
 

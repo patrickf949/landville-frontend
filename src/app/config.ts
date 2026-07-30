@@ -1,4 +1,4 @@
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 import { image_urls } from 'src/assets/img/image_urls';
 
 function appConfig() {

@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../environments/environment';
 import { MapMarker } from 'src/app/modules/shared/components/map/map.component';
 
 @Component({

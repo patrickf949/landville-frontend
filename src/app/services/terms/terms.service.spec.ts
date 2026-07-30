@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { TermsService } from 'src/app/services/terms/terms.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../environments/environment';
 describe('TermsService', () => {
   let service: TermsService;
   let httpTestingController: HttpTestingController;
