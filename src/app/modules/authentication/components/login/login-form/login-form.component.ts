@@ -57,7 +57,7 @@ export class LoginFormComponent implements OnInit {
       this.toastrService.success(response.data.message);
       this.notification = 'Login was succesful';
       this.localStorageService.set('token', response.data.user.token);
-      const to = this.route.snapshot.queryParams['next'] || 'home';
+      const to = this.route.snapshot.queryParams['next'] || '';
       this.router.navigate([`/${to}`.replace('//', '/')]);
     }, error => {
       this.spinner.hide();
