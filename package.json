@@ -10,7 +10,7 @@
     "test": "ng test",
     "serve": "node dist/landville-frontend/server/server.mjs",
     "serve:ssr": "node dist/landville-frontend/server/server.mjs",
-    "build:ssr": "ng build",
+    "build:ssr": "node set-env.js && ng build",
     "install:clean": "rimraf node_modules package-lock.json && npm install"
   },
   "private": true,
