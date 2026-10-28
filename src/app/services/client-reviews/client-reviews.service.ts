@@ -1,4 +1,4 @@
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../environments/environment';
 import { Review } from 'src/app/models/client-reviews/review';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

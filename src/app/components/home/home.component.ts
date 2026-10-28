@@ -5,7 +5,7 @@ import {
 import { Router } from '@angular/router';
 import { PropertiesService } from 'src/app/services/properties/properties.service';
 import { Property } from 'src/app/models/Property';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../environments/environment';
 import { of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';

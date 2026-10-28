@@ -18,47 +18,8 @@ import { PublicProfileComponent } from 'src/app/components/public-profile/public
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
-  },
-  {
-    path: '',
-    component: AuthenticationComponent,
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./modules/authentication/authentication.module').then(m => m.AuthenticationModule)
-      }
-    ]
-  },
-  {
-    path: 'terms-and-conditions',
-    component: TermsPageComponent,
-    data: {
-      title: 'LandVille Terms and Conditions of Use',
-      tags: [],
-    },
-  },
-  {
-    path: 'registersuccess',
-    component: RegistersuccessComponent,
-    data: {
-      title: 'Registration successful',
-      tags: [],
-    },
-  },
-  {
-    path: '',
-    component: FeaturesComponent,
-    children: [{
-      path: '',
-      loadChildren: () => import('./modules/features/features.module').then(m => m.FeaturesModule),
-    }],
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'home',
     component: HomeComponent,
+    pathMatch: 'full',
     data: {
       title: 'LandVille helps you access real estate and property investing in Nigeria.' +
         ' Make the best and safest decision. ' +
@@ -97,6 +58,42 @@ const routes: Routes = [
       ]
     }
   },
+  {
+    path: '',
+    component: AuthenticationComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./modules/authentication/authentication.module').then(m => m.AuthenticationModule)
+      }
+    ]
+  },
+  {
+    path: 'terms-and-conditions',
+    component: TermsPageComponent,
+    data: {
+      title: 'LandVille Terms and Conditions of Use',
+      tags: [],
+    },
+  },
+  {
+    path: 'registersuccess',
+    component: RegistersuccessComponent,
+    data: {
+      title: 'Registration successful',
+      tags: [],
+    },
+  },
+  {
+    path: '',
+    component: FeaturesComponent,
+    children: [{
+      path: '',
+      loadChildren: () => import('./modules/features/features.module').then(m => m.FeaturesModule),
+    }],
+    canActivate: [AuthGuard],
+  },
+
   {
     path: 'properties', component: PropertiesComponent, data: {
       title: 'All Properties | Acquire your dream property with ease today', tags: [
@@ -151,7 +148,7 @@ const routes: Routes = [
   { path: 'auth/:clientId/reviews', component: ClientReviewsComponent },
   {
     path: '**',
-    redirectTo: 'home'
+    redirectTo: ''
   }
 ];
 @NgModule({

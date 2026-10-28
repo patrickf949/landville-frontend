@@ -77,7 +77,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.lastName = '';
     this.profileImage = 'assets/img/people.png';
     this.cdr.detectChanges();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();

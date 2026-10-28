@@ -10,7 +10,7 @@ import { ClientReviewsComponent } from 'src/app/components/client-reviews/client
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../environments/environment';
 
 describe('ClientReviewsComponent', () => {
   let component: ClientReviewsComponent;

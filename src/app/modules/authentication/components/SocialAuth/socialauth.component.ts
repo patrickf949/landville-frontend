@@ -45,7 +45,7 @@ export class SocialLoginComponentt {
           .subscribe(result => {
             this.spinner.hide();
             this.localStorageService.set('token', result.token);
-            this.router.navigate(['/home']);
+            this.router.navigate(['/']);
           });
       })
       .catch(error => {
@@ -66,7 +66,7 @@ export class SocialLoginComponentt {
           .subscribe(result => {
             this.spinner.hide();
             this.localStorageService.set('token', result.token);
-            this.router.navigate(['/home']);
+            this.router.navigate(['/']);
           });
       })
       .catch(error => {
